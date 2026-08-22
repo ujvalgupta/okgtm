@@ -1,0 +1,454 @@
+# ============================================================
+# ENVIRONMENT & SECRETS
+# ============================================================
+
+.env
+.env.*
+!.env.example
+!.env.template
+
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+
+# Local secrets / credentials
+secrets/
+credentials/
+*.secret
+*.secrets
+
+
+# ============================================================
+# PYTHON
+# ============================================================
+
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Python packaging
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# Python caches
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.pyre/
+.pytype/
+.hypothesis/
+
+# Coverage
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+*.cover
+.pytest_cache/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Python tooling
+pip-wheel-metadata/
+poetry.lock
+
+# NOTE:
+# Remove the line above if you intentionally commit poetry.lock.
+
+
+# ============================================================
+# NODE / JAVASCRIPT / TYPESCRIPT
+# ============================================================
+
+node_modules/
+
+# Package manager logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Package manager state
+.npm/
+.yarn/
+.pnpm-store/
+
+# Build output
+dist/
+build/
+out/
+.next/
+.nuxt/
+.svelte-kit/
+.turbo/
+.vercel/
+.netlify/
+
+# TypeScript
+*.tsbuildinfo
+
+# Coverage
+.nyc_output/
+coverage/
+
+# ESLint / tooling caches
+.eslintcache
+.stylelintcache
+
+
+# ============================================================
+# FRONTEND FRAMEWORK CACHES
+# ============================================================
+
+# Next.js
+.next/
+out/
+
+# Vite
+.vite/
+
+# React Native / Expo
+.expo/
+.expo-shared/
+
+# Astro
+.astro/
+
+# Remix
+.cache/
+
+
+# ============================================================
+# AI / ML
+# ============================================================
+
+# Model files
+*.pt
+*.pth
+*.ckpt
+*.safetensors
+*.bin
+*.onnx
+*.gguf
+*.ggml
+
+# ML experiment outputs
+wandb/
+mlruns/
+runs/
+checkpoints/
+experiments/
+
+# Hugging Face cache
+.cache/huggingface/
+huggingface_cache/
+
+# General ML cache
+.model_cache/
+models/
+artifacts/
+
+# Vector databases / local embeddings
+chroma/
+chroma_db/
+.qdrant/
+.weaviate/
+faiss_index/
+
+# NOTE:
+# If models or generated artifacts are part of your application
+# and are intentionally version-controlled, remove the relevant
+# entries above.
+
+
+# ============================================================
+# AI AGENT / LLM LOCAL DATA
+# ============================================================
+
+# Local agent state
+.agent/
+.agent-data/
+.agent_cache/
+
+# MCP/local tool state
+.mcp/
+.mcp-cache/
+
+# Local conversation / memory stores
+memory/
+memories/
+conversations/
+
+# Prompt experimentation
+prompt_logs/
+eval_results/
+evals/
+
+
+# ============================================================
+# DATABASES / LOCAL DATA
+# ============================================================
+
+# SQLite
+*.db
+*.sqlite
+*.sqlite3
+*.db-journal
+*.db-shm
+*.db-wal
+
+# Local database directories
+data/
+database/
+db_data/
+
+# Redis persistence
+dump.rdb
+appendonly.aof
+
+# Local Postgres
+postgres-data/
+
+
+# ============================================================
+# LOGS
+# ============================================================
+
+*.log
+logs/
+log/
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# Application runtime logs
+tmp/
+temp/
+
+
+# ============================================================
+# TESTING
+# ============================================================
+
+.pytest_cache/
+.coverage
+htmlcov/
+coverage/
+.nyc_output/
+
+# Playwright
+test-results/
+playwright-report/
+blob-report/
+
+# Cypress
+cypress/screenshots/
+cypress/videos/
+cypress/downloads/
+
+
+# ============================================================
+# DOCKER
+# ============================================================
+
+# Docker overrides
+docker-compose.override.yml
+docker-compose.local.yml
+
+# Local Docker volumes
+.docker/
+
+
+# ============================================================
+# IDE / EDITORS
+# ============================================================
+
+# VS Code
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+!.vscode/tasks.json
+!.vscode/launch.json
+
+# JetBrains
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# Vim
+*.swp
+*.swo
+*~
+
+# Emacs
+*~
+\#*\#
+.\#*
+
+# Sublime
+*.sublime-workspace
+*.sublime-project
+
+
+# ============================================================
+# OS
+# ============================================================
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+Desktop.ini
+
+# Linux
+.directory
+
+
+# ============================================================
+# LOCAL DEVELOPMENT
+# ============================================================
+
+# Local configuration
+*.local
+*.local.json
+*.local.yaml
+*.local.yml
+
+# Runtime files
+*.pid
+*.pid.lock
+*.seed
+
+# Temporary files
+*.tmp
+*.temp
+
+
+# ============================================================
+# GENERATED API / CODE
+# ============================================================
+
+# OpenAPI generated clients
+generated/
+_codegen/
+
+# GraphQL generated files
+*.generated.ts
+*.generated.tsx
+
+# Prisma
+prisma/generated/
+
+
+# ============================================================
+# CLOUD / INFRASTRUCTURE
+# ============================================================
+
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfvars
+*.tfvars.json
+crash.log
+crash.*.log
+
+# Terraform variable files can contain secrets
+*.auto.tfvars
+
+# Serverless
+.serverless/
+.aws-sam/
+
+# Pulumi
+.pulumi/
+
+
+# ============================================================
+# CLOUD CREDENTIALS
+# ============================================================
+
+.aws/
+.gcloud/
+.azure/
+
+# Kubernetes local configuration
+.kube/
+
+
+# ============================================================
+# SECURITY / CERTIFICATES
+# ============================================================
+
+*.pem
+*.key
+*.crt
+*.csr
+*.p12
+*.pfx
+
+# SSH
+.ssh/
+
+
+# ============================================================
+# DOCUMENTATION / GENERATED FILES
+# ============================================================
+
+# Generated documentation
+docs/_build/
+site/
+
+# Generated reports
+reports/
+generated_reports/
+
+
+# ============================================================
+# LOCAL UPLOADS
+# ============================================================
+
+uploads/
+uploaded_files/
+user_uploads/
+
+# User-generated files that should never enter git
+storage/
+
+
+# ============================================================
+# BACKUPS
+# ============================================================
+
+*.bak
+*.backup
+*.old
+*.orig
+
+
+# ============================================================
+# PROJECT-SPECIFIC LOCAL FILES
+# ============================================================
+
+.local/
+.local-data/
+.dev/
+.dev-data/
