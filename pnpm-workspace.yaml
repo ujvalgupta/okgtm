@@ -1,3 +1,6 @@
 packages:
   - frontend
   - frontend/.pi/scripts
+allowBuilds:
+  sharp: true
+  unrs-resolver: true

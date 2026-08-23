@@ -1,6 +1,7 @@
 # FRONTEND_PLAN.md — OkGTM frontend build pipeline
 
-Status: **approved 2026-08-23**. This document is a *summary contract* — the
+Status: **approved 2026-08-23** (revised same day — single final gate; the old
+Gate A / Gate 1 / Gate 2 model was removed). This document is a *summary contract* — the
 **operational source of truth is the agent files in `frontend/.pi/agents/`**.
 If an agent file and this plan disagree, the agent file wins; update this plan after
 changing agents.
@@ -68,8 +69,8 @@ okgtm/
         ├── refs/<competitor>.md  ← per-competitor consolidated analysis (design + copy)
         ├── refs_design.md   ← merged DESIGN insights for the page (→ frontend-coder)
         ├── refs_copy.md     ← merged COPY insights for the page (→ copywriter)
-        ├── copy.md          ← approved copy (content contract; Gate A)
-        └── code-qa-report.md← QA verdict + issues (Gate 2 input)
+        ├── copy.md          ← final copy (content contract — verbatim for coder)
+        └── code-qa-report.md← QA verdict + issues (final-gate input)
 ```
 
 ## 6. Agents (project-scoped, `frontend/.pi/agents/`)
@@ -91,19 +92,32 @@ STEP 0  MAIN: target page P from the human's request → reads BUSINESS.md + DES
 STEP 1  REFERENCE — parallel, one run per competitor:
         via fetch-page.mjs + web_search → refs/<competitor>.md
         → consolidated by the reference agent itself into refs_design.md + refs_copy.md
-STEP 2  COPYWRITER → copy.md from refs_copy.md     [GATE A: manual, light review]
-STEP 3  FRONTEND CODER → page at app/<P>/page.tsx from refs_design.md + copy.md
-                                                    [GATE 1: manual — screenshots in chat + running page]
-STEP 4  CODE-QA loop (≤3 rounds, then ESCALATE)     [GATE 2: manual — final review of running site]
+STEP 2  COPYWRITER → copy.md from refs_copy.md. No human review here — the main
+        agent applies the contract (omits sections with no real content rather than
+        shipping placeholders) and moves on. Unresolved `[NEEDS: …]` gaps stay in
+        copy.md and are surfaced at the final review.
+STEP 3  FRONTEND CODER → page at app/<P>/page.tsx from refs_design.md + copy.md.
+        Agent verifies build/lint itself; main agent posts Playwright screenshots as
+        a record, not as a gate.
+STEP 4  CODE-QA loop (≤3 rounds, then ESCALATE). THE ONLY GATE: once code-qa
+        PASSes, the human does a single final review of the running site. Nothing
+        earlier stops the pipeline except a hard blocker (agent failure, unresolvable
+        input contradiction) — not design taste, not copy preference.
 STEP 5  ANIMATOR — only if the human explicitly asks
 ```
 
-## 8. Gates & revision rules
+## 8. Review model (single gate at the end)
 
-- **Gate A (copy):** human reads `copy.md`; approves or marks inline edits (≤2 copy rounds)
-- **Gate 1 (design, on real code):** human views the running page — main agent posts
-  Playwright screenshots at 3 breakpoints in chat; human can also open the dev server
-- **Gate 2 (final):** human reviews the code-qa'd page in the running app
+- **No intermediate gates.** Reference, copy, and build phases run to completion
+  without manual stops. The main agent makes copy decisions per the contract
+  (BUSINESS.md + task text): omit sections with no real content, never ship
+  placeholders, never fabricate.
+- **THE ONLY GATE (final):** after code-qa PASSes, the human reviews the running
+  site once — main agent posts Playwright screenshots at 3 breakpoints + the
+  code-qa report. Human says ship, or routes the failed phase back.
+- **Manual intervention before the final gate happens only when something is
+  actually broken**: agent failure/timeout, unresolvable contradiction in inputs,
+  or a code-qa **FAIL — ESCALATE**. Taste/copy preference is not a reason to stop early.
 - Revision cap: **max 3 rounds per phase** — code-qa reports **FAIL — ESCALATE** on
   round 3 instead of looping; escalate to human with a numbered list of unresolved issues
 - **"Not satisfied" rule:** re-run the failed phase only — never a full restart
@@ -140,8 +154,8 @@ drift, any SKILL.md violation, a11y failure · **minor** = everything else (neve
 
 ## 11. Orchestration
 
-- Phase-by-phase, driven by the main agent, pausing at each gate. No workflow script
-  initially; may be added later for one-shot re-runs.
+- Phase-by-phase, driven by the main agent, no pausing except at the final gate. No
+  workflow script initially; may be added later for one-shot re-runs.
 - On agent failure/timeout: retry once with a narrower scope; artifact files preserve
   partial work.
 - Keep this plan in sync with agent files — agents win on conflict.

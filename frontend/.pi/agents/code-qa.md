@@ -1,7 +1,7 @@
 ---
 name: code-qa
 description: Audits the front end code written to ensure it passes the quality check. Used actively when considerable changes are made to the front end code to ensure nothing breaks.
-tools: read, grep, find, ls, bash, screenshot
+tools: read, grep, find, ls, bash, write, web_search, fetch_content
 model: anthropic/claude-sonnet-5
 thinking: medium
 ---
