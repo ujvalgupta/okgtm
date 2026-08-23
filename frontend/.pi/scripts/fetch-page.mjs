@@ -11,8 +11,8 @@
  *   page.txt         visible text (document.body.innerText)
  *
  * Handles JS-rendered/SPA sites that plain fetch cannot. No API keys needed.
- * Installed locally in this directory (own package.json + node_modules) so it
- * never interferes with the Next.js app at frontend/.
+ * Lives in the @okgtm/agent-tools pnpm workspace member — deps are installed by the
+ * single root `pnpm install`, shared via the workspace store.
  */
 import { chromium } from "playwright";
 import fs from "node:fs";

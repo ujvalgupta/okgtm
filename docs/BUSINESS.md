@@ -1,4 +1,4 @@
-# BUSINESS.md — OkGTM
+<!-- # BUSINESS.md — OkGTM
 
 > Fill this in — it is the north star for every page the pipeline builds.
 > Mark unfinished fields with `TODO`.
@@ -33,4 +33,11 @@ TODO: 3–5 competitor home pages — the reference agent looks up the *same pag
 - name: <competitor B>
   url: https://...
   notes: ...
-```
+``` -->
+
+Core idea is to build automations across various stages of a funnel to increase the revenue/profits of a company.
+
+Competitors are ->
+
+https://onegtmlab.com/
+https://www.workflows.io/
