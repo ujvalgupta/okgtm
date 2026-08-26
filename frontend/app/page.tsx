@@ -1,77 +1,81 @@
-import { HeroProductPreview } from "@/components/hero-product-preview";
-import {
-  LeadCapturePreview,
-  EnrichmentPreview,
-  OutboundPreview,
-  FollowUpPreview,
-  HandoffPreview,
-  ReportingPreview,
-} from "@/components/feature-card-preview";
 import {
   Accordion,
   AccordionItem,
   AccordionTrigger,
   AccordionContent,
 } from "@/components/ui/accordion";
+import { ScrollReveal } from "@/components/scroll-reveal";
+import { AmbientVideo } from "@/components/ambient-video";
 
 /* ── Shared CTA destination ── */
-const CTA_MAILTO =
-  "mailto:contactujval@gmail.com?subject=Let%27s%20talk%20-%20OkGTM%20Labs";
+const CTA_HREF = "https://linkedin.com/in/ujvalgupta";
 
 /* ════════════════════════════════════════════════════════════
    Feature card data (verbatim from copy.md §3)
-   Colors per copy.md design hints, no repeated color in a row.
+   Color cycling per DESIGN.md: peach → teal → pink → lavender → ochre → cream
    ════════════════════════════════════════════════════════════ */
 const features = [
   {
-    title: "Capture Leads the Moment They Arrive",
-    body: "Website forms, inbound chat, LinkedIn, imports. Every lead hits one system instantly, no matter where it came from. No more checking five inboxes.",
+    title: "Capture",
+    subtitle: "Leads routed the moment they arrive.",
+    body: "Website forms, inbound chat, LinkedIn, signups, imports. Every lead enters a single system and gets routed instantly to the right workflow. No CSV exports. No manual entry.",
     bgClass: "bg-brand-peach",
-    textClass: "text-ink-on-pastel",
+    textClass: "text-ink",
     colSpan: "",
-    Preview: LeadCapturePreview,
+    featured: false,
+    standoutLine: "",
   },
   {
-    title: "Enrich and Score Leads Automatically",
-    body: "Pull firmographic and contact data from platforms like Apollo and LinkedIn. Score every lead using custom intent signals so your team focuses on the ones most likely to close.",
-    italic:
-      "Most clients start here. It's where manual hours disappear fastest.",
+    title: "Enrich + Score",
+    subtitle: "Know who\u2019s worth your time before you spend it.",
+    body: "Every lead is enriched with firmographic and contact data from platforms like Apollo and LinkedIn, then scored using intent signals. Your team stops guessing which leads matter and starts working the ones that do.",
     bgClass: "bg-brand-teal",
     textClass: "text-on-dark",
-    colSpan: "md:col-span-2",
-    Preview: EnrichmentPreview,
+    colSpan: "lg:col-span-2",
+    featured: true,
+    standoutLine:
+      "This is where most teams start. It\u2019s also where the biggest time savings hide.",
   },
   {
-    title: "Run Multi-Channel Outbound on Autopilot",
-    body: "Trigger email and LinkedIn sequences based on lead score and behavior. Warm-up routines, custom timing, and personalized messaging built in from day one.",
+    title: "Outbound",
+    subtitle:
+      "Sequences that start with context, not cold lists.",
+    body: "Email and LinkedIn sequences triggered by fit score, behavior signals, and funnel stage. Domain warm-up built in. Every message lands with relevance because it\u2019s backed by enrichment and scoring data, not a static spreadsheet.",
     bgClass: "bg-brand-pink",
-    textClass: "text-ink-on-pastel",
-    colSpan: "",
-    Preview: OutboundPreview,
+    textClass: "text-ink",
+    colSpan: "lg:col-span-2",
+    featured: false,
+    standoutLine: "",
   },
   {
-    title: "Follow Up Based on What Leads Actually Do",
-    body: "Every follow-up is tied to real intent signals, not arbitrary timers. When a lead engages, your system responds. When they go quiet, it adapts.",
+    title: "Follow-ups",
+    subtitle: "Timed to intent, not to someone\u2019s memory.",
+    body: "Follow-up sequences tied to lead activity and intent signals. When a lead engages, the system responds. When they go quiet, it re-engages on a schedule your team defines. No leads forgotten in a dead pipeline.",
     bgClass: "bg-brand-lavender",
-    textClass: "text-ink-on-pastel",
+    textClass: "text-ink",
     colSpan: "",
-    Preview: FollowUpPreview,
+    featured: false,
+    standoutLine: "",
   },
   {
-    title: "Hand Off to Sales with Full Context",
-    body: 'Leads arrive in your CRM with enrichment data, sequence history, and activity log attached. Works with HubSpot, Salesforce, Clay, and AI-native CRMs. No more "what do we know about this lead?" conversations.',
+    title: "Handoff",
+    subtitle: "Sales gets context, not just a name.",
+    body: "When a lead is ready, it moves into your CRM with full history attached: enrichment data, sequence activity, engagement signals. Works with HubSpot, Salesforce, Clay, and AI-native CRMs. Your sales team picks up where the system left off.",
     bgClass: "bg-brand-ochre",
-    textClass: "text-ink-on-pastel",
-    colSpan: "",
-    Preview: HandoffPreview,
+    textClass: "text-ink",
+    colSpan: "lg:col-span-2",
+    featured: false,
+    standoutLine: "",
   },
   {
-    title: "See What's Working and What Isn't",
-    body: "Connect activity to outcomes across every stage of your funnel. Track what drives revenue and cut what doesn't.",
+    title: "Reporting",
+    subtitle: "See what\u2019s working. Fix what isn\u2019t.",
+    body: "Track performance across every stage of your funnel from one view. Understand where leads convert, where they stall, and which automations drive pipeline forward.",
     bgClass: "bg-surface-card",
     textClass: "text-ink",
-    colSpan: "md:col-span-2 lg:col-span-3",
-    Preview: ReportingPreview,
+    colSpan: "",
+    featured: false,
+    standoutLine: "",
   },
 ] as const;
 
@@ -80,24 +84,20 @@ const features = [
    ════════════════════════════════════════════════════════════ */
 const steps = [
   {
-    num: 1,
-    title: "Talk to Us",
-    body: "Book a call. Tell us where your funnel leaks and which stages eat the most of your team's time.",
+    title: "Book a call",
+    body: "Tell us where your funnel breaks down and which stages cost the most time. We\u2019ll scope what to build first.",
   },
   {
-    num: 2,
-    title: "We Build It",
-    body: "Our engineers design custom automations for your stack. Not templates you configure yourself. Systems built for how your team actually sells.",
+    title: "We design and build your automations",
+    body: "Custom workflows designed for your tools, your data, and your sales process. Not a template. Not a generic playbook. Built for how your team actually works.",
   },
   {
-    num: 3,
-    title: "Live in Under 23 Hours",
-    body: 'Your first automation MVP runs within 23 hours of closing the deal. Not "onboarding." Not an "implementation timeline." Running.',
+    title: "We run it with you",
+    body: "Automations run on your servers or ours. You get a full walkthrough of every workflow, plus ongoing support. You understand what\u2019s running and why.",
   },
   {
-    num: 4,
-    title: "Scale From There",
-    body: "Add more funnel stages, adjust triggers, expand channels. Month-to-month, cancel anytime.",
+    title: "Stay as long as it works",
+    body: "Month-to-month. No annual lock-in. Cancel anytime. If it\u2019s working, we keep building. If it\u2019s not, we fix it or you walk.",
   },
 ] as const;
 
@@ -106,24 +106,24 @@ const steps = [
    ════════════════════════════════════════════════════════════ */
 const faqs = [
   {
-    q: "What exactly is OkGTM Labs?",
-    a: "Part agency, part engineering team. We build custom GTM automations and manage them for you. Think of us as the technical co-founder your go-to-market is missing.",
+    q: "What is OkGTM Labs?",
+    a: "OkGTM Labs is a hybrid GTM service. We design, build, and manage go-to-market automations for B2B companies. Think of us as the team that connects your existing tools into one system that runs your funnel end-to-end: from lead capture through enrichment, outbound, follow-ups, sales handoff, and reporting.",
   },
   {
-    q: "How fast will I see something working?",
-    a: 'Your first automation MVP runs within 23 hours of closing the deal. Not a proposal, not a roadmap. A working system.',
+    q: "How fast can you get our automations running?",
+    a: "It depends on the complexity of your stack and your funnel. We scope the timeline on our first call so you know exactly what to expect before any work begins. We won\u2019t give you a number we can\u2019t back up.",
   },
   {
-    q: "What if it doesn't deliver?",
-    a: "We don't want your money if we're not getting you results. If the automations aren't working, we'll tell you before you tell us. We pick clients carefully because we only take on work we believe will drive real outcomes.",
+    q: "What if the automations don\u2019t deliver results?",
+    a: "We don\u2019t want your money if we\u2019re not generating value. If the system isn\u2019t working, we\u2019ll adjust until it does. And because the engagement is month-to-month, you\u2019re never stuck paying for something that isn\u2019t performing.",
   },
   {
-    q: "What's the commitment?",
-    a: "Month-to-month. Cancel anytime. No annual lock-in.",
+    q: "Is there a long-term commitment?",
+    a: "No. Month-to-month. Cancel anytime. No annual contracts, no setup fees that lock you in. The work earns its place every month or you walk.",
   },
   {
-    q: "Which tools do you work with?",
-    a: "All the major GTM platforms: HubSpot, Salesforce, Clay, Apollo, LinkedIn, Instantly, Outreach, and more. We work with your existing stack or recommend the right one. If a tool doesn't exist for what you need, we build it.",
+    q: "Which tools and platforms do you work with?",
+    a: "All major GTM platforms. HubSpot, Salesforce, Clay, Apollo, LinkedIn, Instantly, Smartlead, and more. If your team uses it for go-to-market, we can build automations around it. We\u2019re not locked to one stack.",
   },
 ] as const;
 
@@ -133,33 +133,46 @@ const faqs = [
 export default function HomePage() {
   return (
     <>
-      {/* ═══════════════ 1. HERO ═══════════════ */}
+      {/* ═══════════════ 1. HERO (typographic, single column) ═══════════════ */}
       <section
-        className="flex min-h-[100dvh] items-center bg-canvas pt-16"
+        className="bg-canvas pb-24 pt-16 md:pt-24"
         aria-labelledby="hero-heading"
       >
-        <div className="mx-auto grid w-full max-w-[1280px] items-center gap-10 px-6 md:grid-cols-12 md:gap-12 lg:gap-16">
-          {/* Copy: 7 of 12 columns */}
-          <div className="md:col-span-8">
-            <p className="text-xs font-semibold uppercase tracking-[0.125em] text-muted-foreground">
-              FOR B2B COMPANIES
+        <div className="mx-auto w-full max-w-[1280px] px-6">
+          <div className="mx-auto max-w-[720px] text-center">
+            {/* Eyebrow */}
+            <p
+              className="hero-enter text-xs font-semibold uppercase tracking-[1.5px] text-muted-foreground"
+              style={{ "--hero-delay": "0ms" } as React.CSSProperties}
+            >
+              GTM OS FOR B2B COMPANIES
             </p>
 
+            {/* Headline (display-xl) */}
             <h1
               id="hero-heading"
-              className="mt-4 font-display text-4xl font-medium leading-[1] tracking-[-0.04em] text-ink md:text-[48px] xl:text-[56px]"
+              className="hero-enter mt-5 font-display text-[36px] font-medium leading-[1] tracking-[-1px] text-ink md:text-[34px] md:tracking-[-1px] lg:text-[40px] lg:tracking-[-1.5px] xl:text-[52px] xl:tracking-[-2px]"
+              style={{ "--hero-delay": "80ms" } as React.CSSProperties}
             >
-              We Build Your Revenue Engine. Live in Under 23 Hours.
+              Your entire go-to-market funnel, built and managed for you.
             </h1>
 
-            <p className="mt-5 max-w-[52ch] text-base leading-relaxed text-body md:text-lg">
-              Custom GTM automations across your full funnel. From lead capture
-              to revenue, built and managed for you.
+            {/* Subtext (body-md) */}
+            <p
+              className="hero-enter mx-auto mt-6 max-w-[52ch] text-pretty text-base leading-relaxed text-body md:text-lg"
+              style={{ "--hero-delay": "160ms" } as React.CSSProperties}
+            >
+              We design, build, and run GTM automations across every stage of
+              your funnel so your team closes more deals.
             </p>
 
-            <div className="mt-8 flex flex-wrap items-center gap-4">
+            {/* CTAs */}
+            <div
+              className="hero-enter mt-8 flex flex-wrap items-center justify-center gap-4"
+              style={{ "--hero-delay": "240ms" } as React.CSSProperties}
+            >
               <a
-                href={CTA_MAILTO}
+                href={CTA_HREF}
                 className="inline-flex h-11 items-center rounded-[12px] bg-primary px-5 text-sm font-semibold text-on-primary transition-colors hover:bg-primary-active active:scale-[0.98]"
               >
                 Let&apos;s talk
@@ -172,74 +185,99 @@ export default function HomePage() {
               </a>
             </div>
           </div>
-
-          {/* Product preview: 5 of 12 columns */}
-          <div className="md:col-span-4">
-            <HeroProductPreview />
-          </div>
         </div>
       </section>
 
-      {/* ═══════════════ 2. PROBLEM ═══════════════ */}
+      {/* ═══════════════ 2. PROBLEM FRAMING ═══════════════ */}
       <section
         className="bg-surface-soft py-24"
         aria-labelledby="problem-heading"
       >
         <div className="mx-auto max-w-[1280px] px-6">
-          <div className="max-w-[720px]">
+          <div className="grid items-center gap-12 lg:grid-cols-2">
+            <ScrollReveal className="max-w-[640px]">
+            <p className="text-xs font-semibold uppercase tracking-[1.5px] text-muted-foreground">
+              THE PROBLEM
+            </p>
             <h2
               id="problem-heading"
-              className="font-display text-3xl font-medium leading-tight tracking-[-0.025em] text-ink md:text-[40px] md:leading-[1.1]"
+              className="mt-4 text-balance font-display text-[28px] font-medium leading-[1.05] tracking-[-0.5px] text-ink md:text-[40px] md:tracking-[-1px] lg:text-[56px] lg:tracking-[-2px]"
             >
-              Your GTM Is Held Together with Tabs and Hope
+              Lots of tools. Zero&nbsp;orchestration.
             </h2>
 
-            <div className="mt-6 space-y-5 text-base leading-relaxed text-body">
-              <p>
-                You&apos;re running five tools that don&apos;t talk to each
-                other. Leads slip between your form builder, enrichment
-                provider, sequencer, and CRM. Every handoff is manual.
+            <div className="mt-8 space-y-5 text-base leading-relaxed text-body">
+              {/* One alignment + one max-width for every paragraph (design rule):
+                  left-aligned block, all paragraphs max-w-[480px], so line breaks
+                  are a predictable function of that width. Right side of the
+                  section is reserved for a future visual. */}
+              <p className="max-w-[480px] text-pretty">
+                Your CRM holds stale records. Your enrichment tool runs in a
+                separate tab. Outbound sequences fire without context from
+                inbound signals. Follow-ups slip because no one owns them.
               </p>
-              <p>
-                Or you hired an agency that handed you a strategy deck and
-                vanished into a blackbox. You can&apos;t see what&apos;s
-                running, what&apos;s working, or what changed.
+              <p className="max-w-[480px] text-pretty">
+                The result: leads fall through the cracks between tools that
+                were never designed to talk to each other.
               </p>
-              <p>
-                Revenue is leaking. Not because your product is wrong, but
-                because your go-to-market system doesn&apos;t exist yet.
+              <p className="max-w-[480px] text-pretty">
+                Most teams try to fix this by adding another tool. That makes it
+                worse. What&apos;s missing isn&apos;t another point solution.
+                It&apos;s the layer that connects them all.
               </p>
             </div>
+          </ScrollReveal>
+
+            {/* Right: clay-style problem visual */}
+            <ScrollReveal delay={120}>
+              <div className="overflow-hidden rounded-[24px] border border-hairline bg-canvas">
+                <AmbientVideo
+                  src="/videos/problem-clay-worker.mp4"
+                  className="aspect-video w-full object-cover"
+                />
+              </div>
+            </ScrollReveal>
           </div>
         </div>
       </section>
 
-      {/* ═══════════════ 3. FEATURE CARDS ═══════════════ */}
-      <section
-        id="features"
-        className="bg-canvas py-24"
-        aria-label="What we automate"
-      >
+      {/* ═══════════════ 3. FEATURE CARDS ×6 ═══════════════ */}
+      <section className="bg-canvas py-24" aria-labelledby="features-heading">
         <div className="mx-auto max-w-[1280px] px-6">
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {features.map((f) => (
-              <div
+          <ScrollReveal className="mx-auto max-w-[640px] text-center">
+            <p className="text-xs font-semibold uppercase tracking-[1.5px] text-muted-foreground">
+              WHAT WE BUILD FOR YOU
+            </p>
+            <h2
+              id="features-heading"
+              className="mt-4 text-balance font-display text-[28px] font-medium leading-[1.05] tracking-[-0.5px] text-ink md:text-[40px] md:tracking-[-1px] lg:text-[56px] lg:tracking-[-2px]"
+            >
+              Every stage of your funnel. One connected system.
+            </h2>
+          </ScrollReveal>
+
+          <div className="mt-12 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {features.map((f, i) => (
+              <ScrollReveal
                 key={f.title}
-                className={`${f.bgClass} ${f.textClass} ${f.colSpan} rounded-[24px] p-8`}
+                delay={i * 60}
+                className={`${f.bgClass} ${f.textClass} ${f.colSpan} flex flex-col rounded-[24px] p-8`}
               >
                 <h3 className="text-lg font-semibold leading-tight">
                   {f.title}
                 </h3>
-                <p className="mt-3 text-sm leading-relaxed opacity-90">
-                  {f.body}
+                <p className="mt-2 text-pretty text-sm font-medium leading-snug opacity-85">
+                  {f.subtitle}
                 </p>
-                {"italic" in f && f.italic && (
-                  <p className="mt-3 text-sm leading-relaxed italic opacity-75">
-                    {f.italic}
+                {f.standoutLine && (
+                  <p className="mt-3 text-pretty text-sm italic leading-relaxed opacity-80">
+                    {f.standoutLine}
                   </p>
                 )}
-                <f.Preview />
-              </div>
+                <p className="mt-3 flex-1 text-balance text-sm leading-relaxed opacity-90">
+                  {f.body}
+                </p>
+              </ScrollReveal>
             ))}
           </div>
         </div>
@@ -252,29 +290,32 @@ export default function HomePage() {
         aria-labelledby="hiw-heading"
       >
         <div className="mx-auto max-w-[1280px] px-6">
-          <h2
-            id="hiw-heading"
-            className="mb-12 max-w-[640px] font-display text-3xl font-medium leading-tight tracking-[-0.025em] text-ink md:text-[40px] md:leading-[1.1]"
-          >
-            Four Steps. First One Is a Conversation.
-          </h2>
+          <ScrollReveal className="mx-auto max-w-[640px] text-center">
+            <p className="text-xs font-semibold uppercase tracking-[1.5px] text-muted-foreground">
+              HOW IT WORKS
+            </p>
+            <h2
+              id="hiw-heading"
+              className="mt-4 mb-12 mx-auto max-w-[640px] text-balance font-display text-[28px] font-medium leading-[1.05] tracking-[-0.5px] text-ink md:text-[40px] md:tracking-[-1px] lg:text-[56px] lg:tracking-[-2px]"
+            >
+              Four steps. Built around your stack.
+            </h2>
+          </ScrollReveal>
 
-          <div className="grid gap-6 md:grid-cols-2">
-            {steps.map((step) => (
-              <div
-                key={step.num}
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            {steps.map((step, i) => (
+              <ScrollReveal
+                key={step.title}
+                delay={i * 80}
                 className="rounded-[16px] bg-canvas p-8"
               >
-                <span className="mb-4 flex h-9 w-9 items-center justify-center rounded-[12px] bg-surface-card text-sm font-semibold text-ink">
-                  {step.num}
-                </span>
-                <h3 className="text-lg font-semibold text-ink">
+                <h3 className="text-base font-semibold text-ink">
                   {step.title}
                 </h3>
-                <p className="mt-2 text-sm leading-relaxed text-body">
+                <p className="mt-2 text-pretty text-sm leading-relaxed text-body">
                   {step.body}
                 </p>
-              </div>
+              </ScrollReveal>
             ))}
           </div>
         </div>
@@ -287,60 +328,64 @@ export default function HomePage() {
         aria-labelledby="why-heading"
       >
         <div className="mx-auto max-w-[1280px] px-6">
-          <h2
-            id="why-heading"
-            className="mb-12 max-w-[640px] font-display text-3xl font-medium leading-tight tracking-[-0.025em] text-ink md:text-[40px] md:leading-[1.1]"
-          >
-            Not Another Agency. Not Another Tool.
-          </h2>
-
-          {/* Comparison cards */}
-          <div className="grid gap-6 md:grid-cols-2">
-            {/* vs Agencies */}
-            <div className="rounded-[16px] bg-surface-soft p-8">
-              <h3 className="text-base font-semibold text-ink">
-                vs. Traditional Agencies
-              </h3>
-              <div className="mt-4 space-y-4 text-sm leading-relaxed text-body">
-                <p>
-                  They hand you a strategy deck and disappear. You pay monthly,
-                  get a status call, and never see what&apos;s actually running.
-                </p>
-                <p>
-                  We build in front of you. No blackbox, no mystery, no junior
-                  team running your account in the background.
-                </p>
-              </div>
-            </div>
-
-            {/* vs Point Tools */}
-            <div className="rounded-[16px] bg-surface-soft p-8">
-              <h3 className="text-base font-semibold text-ink">
-                vs. Point Tools
-              </h3>
-              <div className="mt-4 space-y-4 text-sm leading-relaxed text-body">
-                <p>
-                  Apollo, Clay, HubSpot, Instantly, Outreach. Good tools. But
-                  they&apos;re just dots.
-                </p>
-                <p>
-                  None of them connect to each other on their own. OkGTM Labs
-                  connects those dots in the right order, turning isolated tools
-                  into one system that runs your full funnel.
-                </p>
-              </div>
-            </div>
-          </div>
-
-          {/* Founder section */}
-          <div className="mt-6 rounded-[16px] bg-brand-teal p-8 text-on-dark">
-            <h3 className="text-base font-semibold">The OkGTM Difference</h3>
-            <p className="mt-4 max-w-[65ch] text-sm leading-relaxed opacity-90">
-              We&apos;re a small, technical team led by founder Ujval Gupta. We
-              bend tech to drive revenue. If a tool doesn&apos;t do what we
-              need, we build around it or build our own.
+          <ScrollReveal className="mx-auto max-w-[640px] text-center">
+            <p className="text-xs font-semibold uppercase tracking-[1.5px] text-muted-foreground">
+              WHY OKGTM
             </p>
+            <h2
+              id="why-heading"
+              className="mt-4 text-balance font-display text-[28px] font-medium leading-[1.05] tracking-[-0.5px] text-ink md:text-[40px] md:tracking-[-1px] lg:text-[56px] lg:tracking-[-2px]"
+            >
+              Not another tool. Not a typical agency.
+            </h2>
+          </ScrollReveal>
+
+          {/* Blocks A + B: side-by-side comparison cards */}
+          <div className="mt-12 grid gap-6 md:grid-cols-2">
+            {/* Block A: vs. Point Tools */}
+            <ScrollReveal className="rounded-[16px] bg-surface-soft p-8">
+              <h3 className="font-display text-[24px] font-medium leading-[1.15] tracking-[-0.3px] text-ink">
+                More than individual tools
+              </h3>
+              <p className="mt-5 text-pretty text-sm leading-relaxed text-body">
+                Clay, Apollo, Instantly, HubSpot. They&apos;re excellent at what
+                they do. But they don&apos;t talk to each other out of the box.
+                OkGTM builds the orchestration layer that connects them into one
+                system: capture to enrichment to outbound to handoff, with data
+                flowing between every stage.
+              </p>
+            </ScrollReveal>
+
+            {/* Block B: vs. Agencies */}
+            <ScrollReveal
+              delay={80}
+              className="rounded-[16px] bg-surface-soft p-8"
+            >
+              <h3 className="font-display text-[24px] font-medium leading-[1.15] tracking-[-0.3px] text-ink">
+                Done for you. Owned by you.
+              </h3>
+              <p className="mt-5 text-pretty text-sm leading-relaxed text-body">
+                We build and run your automations like an agency would. The
+                difference: everything runs on your infrastructure if you want
+                it to, and you get full visibility into every workflow. When the
+                engagement ends, you keep what we built.
+              </p>
+            </ScrollReveal>
           </div>
+
+          {/* Block C: Risk Reversal — featured teal card for emphasis */}
+          <ScrollReveal className="mt-6 rounded-[24px] bg-brand-teal p-8 text-on-dark md:p-12">
+            <h3 className="font-display text-[24px] font-medium leading-[1.15] tracking-[-0.3px] md:text-[34px] md:tracking-[-1px]">
+              We don&apos;t want your money if we don&apos;t get you results.
+            </h3>
+            <p className="mt-5 max-w-[65ch] text-pretty text-sm leading-relaxed opacity-90">
+              That&apos;s not a tagline. It&apos;s how we operate. If the
+              automations we build aren&apos;t generating measurable value for
+              your team, we&apos;ll make it right. Month-to-month commitment
+              means you&apos;re never locked in. The work has to earn its place
+              every month.
+            </p>
+          </ScrollReveal>
         </div>
       </section>
 
@@ -350,50 +395,56 @@ export default function HomePage() {
         aria-labelledby="faq-heading"
       >
         <div className="mx-auto max-w-[800px] px-6">
-          <h2
-            id="faq-heading"
-            className="mb-10 font-display text-3xl font-medium leading-tight tracking-[-0.025em] text-ink md:text-[40px] md:leading-[1.1]"
-          >
-            Questions We Actually Get
-          </h2>
+          <ScrollReveal className="text-center">
+            <p className="text-xs font-semibold uppercase tracking-[1.5px] text-muted-foreground">
+              FREQUENTLY ASKED QUESTIONS
+            </p>
+            <h2
+              id="faq-heading"
+              className="mt-4 mb-10 font-display text-[28px] font-medium leading-[1.05] tracking-[-0.5px] text-ink md:text-[40px] md:tracking-[-1px] lg:text-[56px] lg:tracking-[-2px]"
+            >
+              Questions we hear on every call.
+            </h2>
+          </ScrollReveal>
 
-          <Accordion>
-            {faqs.map((faq, i) => (
-              <AccordionItem key={i} value={`faq-${i}`}>
-                <AccordionTrigger>{faq.q}</AccordionTrigger>
-                <AccordionContent>
-                  <p>{faq.a}</p>
-                </AccordionContent>
-              </AccordionItem>
-            ))}
-          </Accordion>
+          <ScrollReveal>
+            <Accordion>
+              {faqs.map((faq, i) => (
+                <AccordionItem key={i} value={`faq-${i}`}>
+                  <AccordionTrigger>{faq.q}</AccordionTrigger>
+                  <AccordionContent>
+                    <p className="text-pretty">{faq.a}</p>
+                  </AccordionContent>
+                </AccordionItem>
+              ))}
+            </Accordion>
+          </ScrollReveal>
         </div>
       </section>
 
-      {/* ═══════════════ 7. CTA BAND ═══════════════ */}
+      {/* ═══════════════ 7. CTA BAND (cta-band-illustrated) ═══════════════ */}
       <section className="bg-canvas py-24" aria-labelledby="cta-heading">
         <div className="mx-auto max-w-[1280px] px-6">
-          <div className="rounded-[24px] bg-surface-soft px-8 py-16 text-center md:px-20 md:py-20">
+          <ScrollReveal className="rounded-[24px] bg-surface-soft px-8 py-16 text-center md:px-20 md:py-20">
             <h2
               id="cta-heading"
-              className="font-display text-3xl font-medium leading-tight tracking-[-0.025em] text-ink md:text-[40px] md:leading-[1.1]"
+              className="font-display text-[28px] font-medium leading-[1.1] tracking-[-0.5px] text-ink md:text-[40px] md:tracking-[-1px]"
             >
-              Stop Duct-Taping Your Funnel
+              Start with what costs your team the most time.
             </h2>
-            <p className="mx-auto mt-5 max-w-[56ch] text-base leading-relaxed text-body">
-              Most teams start with lead enrichment and scoring. Book a call
-              with Ujval and find out where your funnel is leaking and what to
-              automate first.
+            <p className="mx-auto mt-5 max-w-[56ch] text-pretty text-base leading-relaxed text-body">
+              Most teams begin with lead enrichment and scoring. 30 minutes. No
+              pitch deck. Just a clear look at where your funnel leaks.
             </p>
             <div className="mt-8">
               <a
-                href={CTA_MAILTO}
+                href={CTA_HREF}
                 className="inline-flex h-11 items-center rounded-[12px] bg-primary px-5 text-sm font-semibold text-on-primary transition-colors hover:bg-primary-active active:scale-[0.98]"
               >
                 Let&apos;s talk
               </a>
             </div>
-          </div>
+          </ScrollReveal>
         </div>
       </section>
     </>

@@ -1,6 +1,6 @@
 ---
 name: animator
-description: Adds restrained, tasteful motion to a finished OkGTM page on EXPLICIT human request only. Never runs automatically. Touch only the motion layer — no structural or visual changes.
+description: Never runs automatically as part of frontend pipeline. Only use when explicitly asked to add animations.
 tools: read, grep, find, ls, bash, write, web_search, fetch_content
 thinking: medium
 model: anthropic/claude-opus-4-6

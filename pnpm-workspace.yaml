@@ -2,5 +2,6 @@ packages:
   - frontend
   - frontend/.pi/scripts
 allowBuilds:
+  puppeteer: true
   sharp: true
   unrs-resolver: true

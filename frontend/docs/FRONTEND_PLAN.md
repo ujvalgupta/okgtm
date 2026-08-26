@@ -1,7 +1,11 @@
 # FRONTEND_PLAN.md — OkGTM frontend build pipeline
 
 Status: **approved 2026-08-23** (revised same day — single final gate; the old
-Gate A / Gate 1 / Gate 2 model was removed). This document is a *summary contract* — the
+Gate A / Gate 1 / Gate 2 model was removed). Revised again 2026-08-23 (evening):
+**text-first capture** (`fetch-page.mjs` v4), **`refs_design.md` removed** from the
+flow (the coder does not read competitor design files — DESIGN.md is the sole
+design authority), and **OkGTM pages are cream/light-only — no dark mode**
+(per DESIGN.md; SKILL.md's dark-mode default does not apply). This document is a *summary contract* — the
 **operational source of truth is the agent files in `frontend/.pi/agents/`**.
 If an agent file and this plan disagree, the agent file wins; update this plan after
 changing agents.
@@ -22,6 +26,10 @@ production-ready page at a time**, accumulating into the frontend app.
 | `frontend/docs/FRONTEND_PLAN.md` | this doc | Pipeline summary — see §6 note: agents are the contract |
 | `frontend/.pi/agents/*.md` | human-maintained | **Source of truth** — per-agent system prompts, tools, models |
 
+**Note:** there is **no `refs_design.md`** anywhere in the flow. Competitor design
+files are not consumed by the coder; DESIGN.md is the sole design authority for
+every page.
+
 ## 3. Tech stack
 
 - **Final code:** Next.js (App Router) + Tailwind CSS + shadcn/ui — this IS the design.
@@ -36,15 +44,28 @@ production-ready page at a time**, accumulating into the frontend app.
   (frontend-coder, animator) and `anthropic/claude-sonnet-5` (reference, copywriter,
   code-qa). Thinking levels per agent (medium/high).
 - **Motion:** restrained; `prefers-reduced-motion` respected.
+- **Theme:** OkGTM is cream/light-only (DESIGN.md). No dark mode on any page —
+  SKILL.md's "dark mode mandatory" default does not apply to this brand.
 
 ## 4. Web access & search (agents)
 
 Two mechanisms, both installed:
 
-- **Playwright capture script** — `frontend/.pi/scripts/fetch-page.mjs` (used by
-  `reference`): `node fetch-page.mjs <url> <outdir>` → `screenshot.png` (full-page),
-  `page.html` (rendered DOM), `page.txt` (visible text). Handles JS-rendered/SPA sites;
-  the screenshot powers visual analysis. Lives in the `@okgtm/agent-tools` workspace member.
+- **Capture script** — `frontend/.pi/scripts/fetch-page.mjs` (used by `reference`):
+  `node fetch-page.mjs <url> <outdir> [--screenshot] [--html] [--browser]`.
+  **Text-first by default:** plain HTTP fetch → strips markup/entities → `page.txt`
+  (no browser, no screenshot, ~1s). Falls back to a Playwright pass only when the
+  direct text is too sparse (JS-rendered/SPA sites, Cloudflare challenges).
+  `--screenshot` (full-page PNG) and `--html` (raw response / rendered DOM) are
+  **opt-in** — no agent requires them by default; reference analysis is text-based.
+  Lives in the `@okgtm/agent-tools` workspace member.
+- **QA capture script** — `frontend/.pi/scripts/qa-capture.mjs` (used by `code-qa`):
+  `node qa-capture.mjs <url> <outdir> [--breakpoints 375,768,1440] [--no-full]`.
+  Implements the visual-QA capture protocol: (a) full-page screenshots per breakpoint
+  (LAYOUT pass), (b) every `<section>` plus `<header>`/`<footer>` captured individually
+  at 1:1 — scrolled into view first (fires scroll-reveal), clipped to its own bounds
+  (DETAIL/legibility pass). Writes a `manifest.json`. Also in the
+  `@okgtm/agent-tools` workspace member.
 - **pi-web-access tools** — `web_search`, `fetch_content`, `get_search_content`
   (extension installed; keyless default). Available where an agent's `tools` allowlist
   declares them. `web_search` = search engine; `fetch_content` = page/repo/PDF/YouTube
@@ -65,10 +86,10 @@ okgtm/
     │   └── scripts/         ← @okgtm/agent-tools workspace member (Playwright helper)
     ├── docs/                ← common markdown: DESIGN.md, SKILL.md, FRONTEND_PLAN.md
     └── artifacts/<page>/    ← per-page build-flow artifacts
-        ├── refs/            ← raw captures per competitor (screenshot.png, page.html, page.txt)
-        ├── refs/<competitor>.md  ← per-competitor consolidated analysis (design + copy)
-        ├── refs_design.md   ← merged DESIGN insights for the page (→ frontend-coder)
+        ├── refs/            ← raw captures per competitor (page.txt by default; page.html / screenshot.png only when flags asked)
+        ├── refs/<competitor>.md  ← per-competitor analysis (structure + copy insights, text-based)
         ├── refs_copy.md     ← merged COPY insights for the page (→ copywriter)
+        │                    ← NOTE: refs_design.md does NOT exist — DESIGN.md is the sole design source
         ├── copy.md          ← final copy (content contract — verbatim for coder)
         └── code-qa-report.md← QA verdict + issues (final-gate input)
 ```
@@ -77,9 +98,9 @@ okgtm/
 
 | Agent | Model | Thinking | Purpose & Output |
 |---|---|---|---|
-| `reference` | sonnet-5 | medium | Finds/captures competitor pages for the target page (fetch script + web_search). Writes `refs/<competitor>.md` (structure, verbatim copy inventory, hierarchy/flow, social proof, objection handling, design notes, psychology tags, verdict/steal/avoid, soul read) and consolidates into `refs_design.md` + `refs_copy.md`. Never invents content — quotes only. |
-| `copywriter` | sonnet-5 | high | Writes `copy.md` from `refs_copy.md` + BUSINESS.md. Beats competitors on a named axis; facts traceable to BUSINESS.md or cited sources (`[NEEDS: …]` for gaps — never fabricate). Never copies competitor phrasing. |
-| `frontend-coder` | opus-4-6 | medium | Builds the page at `app/<page>/page.tsx` from `refs_design.md` + `copy.md` per DESIGN.md + SKILL.md. Scaffolds app if missing; pnpm; verbatim copy; self-audit before finishing. |
+| `reference` | sonnet-5 | medium | Finds/captures competitor pages for the target page (text-first capture script + web_search). Writes `refs/<competitor>.md` (structure, verbatim copy inventory, hierarchy/flow, social proof, objection handling, psychology tags, verdict/steal/avoid, soul read) and consolidates into `refs_copy.md` only. **No `refs_design.md`** — analysis is text-based; screenshots are not required. Never invents content — quotes only. |
+| `copywriter` | opus-4-6 | medium | Writes `copy.md` from `refs_copy.md` + BUSINESS.md. Beats competitors on a named axis; facts traceable to BUSINESS.md or cited sources (`[NEEDS: …]` for gaps — never fabricate). Never copies competitor phrasing. |
+| `frontend-coder` | opus-4-6 | medium | Builds the page at `app/<page>/page.tsx` from `copy.md` per DESIGN.md + SKILL.md. **DESIGN.md is the sole design authority; `refs_design.md` is not read (does not exist).** OkGTM is cream/light-only — no dark mode. Scaffolds app if missing; pnpm; verbatim copy; self-audit before finishing. |
 | `code-qa` | sonnet-5 | medium | Independent quality gate: pnpm build/lint/typecheck, copy fidelity, section coverage, SKILL.md anti-slop rules, responsive, a11y, hygiene, regressions. Writes `code-qa-report.md` (PASS/FAIL, severity, file:line). Round cap 3 → **FAIL — ESCALATE**. |
 | `animator` | opus-4-6 | medium | **Explicit request only.** Adds restrained motion (CSS first, Framer Motion when needed) to an approved page. Reduced-motion mandatory; scope changes reported, never silently implemented. |
 
@@ -89,14 +110,21 @@ okgtm/
 STEP 0  MAIN: target page P from the human's request → reads BUSINESS.md + DESIGN.md
         → defines the page contract IN THE TASK TEXT (sections, per-section goals,
           audience, primary CTA) — no brief.md file; every child gets it inline
-STEP 1  REFERENCE — parallel, one run per competitor:
-        via fetch-page.mjs + web_search → refs/<competitor>.md
-        → consolidated by the reference agent itself into refs_design.md + refs_copy.md
+STEP 1  REFERENCE — parallel, one run per competitor. **ALL competitors in the
+        BUSINESS.md table must be captured — never a subset** (a previous run
+        captured only the two "closest" competitors and lost the rest; the whole
+        table is the job, including the not-closest ones — their patterns still
+        inform the copy). Batch the fanout into waves of 3-4 concurrent runs to
+        avoid OOM on small machines (each browser-mode capture holds a Chromium;
+        direct text-first captures are cheap).
+        via fetch-page.mjs (text-first) + web_search → refs/<competitor>.md
+        → consolidated by the reference agent itself into refs_copy.md only
+        (no refs_design.md — the coder does not read competitor design files).
 STEP 2  COPYWRITER → copy.md from refs_copy.md. No human review here — the main
         agent applies the contract (omits sections with no real content rather than
         shipping placeholders) and moves on. Unresolved `[NEEDS: …]` gaps stay in
         copy.md and are surfaced at the final review.
-STEP 3  FRONTEND CODER → page at app/<P>/page.tsx from refs_design.md + copy.md.
+STEP 3  FRONTEND CODER → page at app/<P>/page.tsx from copy.md per DESIGN.md + SKILL.md.
         Agent verifies build/lint itself; main agent posts Playwright screenshots as
         a record, not as a gate.
 STEP 4  CODE-QA loop (≤3 rounds, then ESCALATE). THE ONLY GATE: once code-qa
@@ -145,9 +173,24 @@ STEP 5  ANIMATOR — only if the human explicitly asks
 4. **Design quality**: SKILL.md anti-slop rules in full (layout/hero/accent/CTA/eyebrows)
 5. **Responsive**: sm/md/lg/xl; explicit mobile collapse; nav single-line at desktop
 6. **a11y**: semantic HTML, heading order, alt, labels, contrast, focus,
-   `prefers-reduced-motion`, dark-mode contrast
+   `prefers-reduced-motion`. Dark mode: n/a — OkGTM pages are cream/light-only
+   per DESIGN.md (any dark-mode UI added is a blocker, not a feature).
 7. **Hygiene**: no dead code, unused imports/deps, console errors, broken links
 8. **No regressions**: previously built pages still build and render
+
+**Visual capture protocol (mandatory — use `qa-capture.mjs`, never ad-hoc scripts):**
+- Full-page captures at 375/768/1440 — judge LAYOUT only (rhythm, spacing, alternation,
+  composition)
+- Every section captured individually at 1:1 (`sec-*` files) — judge DETAIL and
+  legibility; scroll first so scroll-reveal fires; view EVERY capture (no skipping)
+- Vision rules: if text cannot be read in a 1:1 section capture → illegible (blocker);
+  never infer content from code or from prior rounds
+- Judge every section through the ICP lens (founder/CMO scrolling on phone/laptop):
+  would they call it pathetic/cheap/AI-generated, or would it persuade them?
+- Visual bans (BLOCKER, unless the user explicitly provided a reference design to
+  build): diagrams/charts/graphs, progress bars/stat dials, illustrations/decorative
+  artwork, workflow/arrow diagrams, fake product-UI mockups — message carried by
+  type, color, and spacing alone
 
 Severity: **blocker** = build/lint/typecheck failure, missing/misordered section, copy
 drift, any SKILL.md violation, a11y failure · **minor** = everything else (never blocks).

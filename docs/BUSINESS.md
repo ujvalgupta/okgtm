@@ -1,10 +1,5 @@
 # BUSINESS.md — OkGTM
 
-> **North star for every page the pipeline builds.** `reference` and `copywriter` read this
-> file and must be able to trace every claim in the copy to a line here — no invented facts,
-> no borrowed competitor claims. Answer inline under each question, one fact per bullet.
-> Mark unknowns `[TBD]` — the copywriter flags `[TBD]` gaps instead of fabricating.
-
 ---
 
 ## Core idea (filled)
@@ -20,7 +15,6 @@ Build automation systems across various stages of a funnel to increase the reven
 | The GTM Engineering Company | https://www.gtm-engineering.io/ | Fractional GTM engineer — RevOps + data engineering + outbound automation built on the client's own stack (Clay, CRM, sequencers) |
 | ColdIQ | https://coldiq.com/ | AI-powered outbound/lead-gen agency, now also a GTM data API + skills marketplace (enrichment, targeting, sequencing) |
 | DevCommX | https://www.devcommx.com/ | Autonomous AI SDR systems — high-volume signal-based outbound (Clay, HeyReach, Smartlead, HubSpot) |
-| GTM6 | https://www.gtm6.com/ | GTM engineering for VC-backed startups — outbound infra on Clay, Salesforce, Outreach |
 | DarwinApps GTM | https://www.darwinapps.com/ | GTM automation for $10M–$100M ARR SaaS companies (HubSpot, Clay, Apollo) |
 | FullFunnel.co | https://fullfunnel.co/ | Content-led, inbound-focused GTM — LinkedIn demand gen, HubSpot CRM build-outs |
 | Earleads | https://earleads.com/ | High-volume B2B outbound pipeline generation (Apollo, Instantly) |
@@ -57,7 +51,7 @@ not built? (List stage: working / demo / planned.)
 automations in-app themselves (self-serve, no-code), does an OkGTM team build them as a
 service, or both? This decides whether the site sells software or a managed service —
 the core product-vs-agency fork.
---> Right now main aim is service, where we configure automations for them, it could be on their servers or we can manage separate servers for them. ( Don't mention too much technicality in copy)
+--> Right now main aim is service, where we configure automations for them, it could be on their servers or we can manage separate servers for them.
 
 0.4 **Which integrations exist or are planned?** (CRM: HubSpot/Salesforce/others; forms;
 email; enrichment providers; Slack; databases.) The workflows.io analysis shows buyers
@@ -78,7 +72,7 @@ sensitivity (GDPR, SOC2, where data lives) that a buyer would ask about?
 0.7 **What is the honest time-to-first-value?** How long from signup to the first
 automation actually running (minutes/hours/days)? Neither competitor commits to a
 timeframe — a real number here is a differentiator.
---> They get their first automation MVP running in under 23 hours of deal close.
+--> Can't give a fixed number, hard to commit. 
 
 ---
 
@@ -106,7 +100,7 @@ the hero subhead.)
 1.5 **Which competitors do we want to be *compared to* in a buyer's head?** The agencies
 above, or point tools (Clay, Apollo, Instantly, Outreach, Salesforce)? We can't be
 everything; pick the comparison we win.
---> ONEGTMLAB and workflows.io are the closest competitors.
+--> All of them in the competitors list.
 
 ---
 
@@ -143,17 +137,17 @@ attract.
 
 ---
 
-## ★ 3. Market & differentiation — the "why us" section
+## ★ 3. Market & differentiation
 
 3.1 **Product vs. agencies, made concrete:** When a buyer compares OkGTM to onegtmlab/
 workflows.io, what are the 2–3 true advantages of software? (e.g. no retainer, self-serve,
 start in minutes, transparent pricing, you own the system — only facts you can defend.)
---> OkGTM is fast and tech heavy, doesn't rely on blackboxes it bends tech to make revenue
+--> OkGTM is just like its competitors and shouldn't distinguish, it should feel like a premium corporate level agency.
 
 3.2 **vs. point tools** (Clay/Apollo/Instantly/Outreach): what does cross-stage
 orchestration give that they don't? (e.g. lead capture → enrichment → sequence → handoff
 in one flow vs. five disconnected tools.) Keep to capabilities that exist (see §0).
---> The individual GTM tools are just dots in the workflow. It's the OkGTM labs that connects those dots in the right order.
+--> There's nothing special. It's just like other GTM agencies. It's a huge market so I can get my share.
 
 3.3 **The transparency commitment — pick at least one:**
 - ☐ State **pricing shape/range** on-page (what, exactly, can we commit to printing?)
@@ -170,7 +164,7 @@ saved, % faster)? (List any that exist; the rest stay mechanism-level until real
 
 3.5 **Who do we *not* want to be compared to?** Any positioning we must explicitly avoid
 (e.g. "another AI agency," "another outbound tool")?
---> We are not simply connecting tools agency. We are tech savvy and build custom automations or tools if a tool doesn't help us with it. We really open that blackbox.
+--> We are not individual GTM stack tools. We build the orchestration layer.
 
 ---
 
@@ -271,7 +265,7 @@ rebrand land?)
 
 7.3 **Founder-led or product-led voice?** workflows.io is founder-led and personal; our
 current copy is product-led and neutral. Which is true to how we sell?
---> Founder led, Ujval Gupta
+--> Product led voice all the time. No single person involved.
 
 7.4 **Where on the premium-spectrum do we sit:** agency-premium (onegtmlab dark/gold),
 clean-trust (workflows.io light/accent), or our own warm-cream lane? Confirm the current
@@ -284,7 +278,7 @@ DESIGN.md direction survives a second page.
 8.1 **Self-serve vs. sales-led:** can a user genuinely start without talking to us?
 (Answers 5.4; if the honest answer is "no," the counter-position dies and the copy
 changes.)
---> They need to book on a call and talk to us.
+--> They need to book a call and talk to us.
 
 8.2 **Primary conversion goal of the site:** waitlist signup · free-trial start · demo
 call · direct purchase? (The CTA label follows — see 5.3.)
@@ -301,24 +295,14 @@ workflows.io's)? Both competitors have one; do we?
 
 8.5 **Any existing channels to point at** (LinkedIn presence, docs, changelog, case
 studies) that the site should link to?
---> point to my linkedin , linkedin.com/in/ujvalgupta, they can get in touch there as well or send an email, contacyujval@gmail.com, or can book a call ( feature that I'll add later.)
+--> point to my linkedin , linkedin.com/in/ujvalgupta ( primarily ) or send an email, contactujval@gmail.com, or can book a call ( feature that I'll add later.)
 
 ---
 
 ## ★ 9. Open strategic decisions — the ones that cascade
 
-9.1 **Category claim** (§1.2) — decide the one word. --> Revenue Engine
+9.1 **Category claim** (§1.2) — decide the one word. --> GTM OS
 9.2 **Product / service / hybrid** (§0.3 + §1.4) — decide the model. --> Hybrid
 9.3 **Transparency commitment** (§3.3) — pick at least one lever and name the fact behind it. --> Risk reversal
 9.4 **Primary CTA** (§5.3) — "Get early access" vs. "Start free trial" vs. "Book a demo" —
 decide based on product status. --> Let's talk
-
----
-
-### How answers get used
-- **`copywriter`** cites answered lines verbatim; every claim in `copy.md` must trace to a
-  bullet here. Unanswered = `[NEEDS: ...]` in copy, surfaced at review — never fabricated.
-- **`reference`** uses the competitor list + positioning answers to pick the right
-  comparison set for the next page.
-- **Priority:** sections ★ (0, 1, 2, 3, 5, 8, 9) unblock final copy for *any* page.
-  Sections 4, 6, 7 shape but don't block.

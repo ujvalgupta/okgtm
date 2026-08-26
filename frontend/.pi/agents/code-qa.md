@@ -1,6 +1,6 @@
 ---
 name: code-qa
-description: Audits the front end code written to ensure it passes the quality check. Used actively when considerable changes are made to the front end code to ensure nothing breaks.
+description: Used actively when considerable design/style changes are made to the front end code to ensure nothing breaks. Avoid when its just subtle text related changes.
 tools: read, grep, find, ls, bash, write, web_search, fetch_content
 model: anthropic/claude-sonnet-5
 thinking: medium
@@ -29,13 +29,29 @@ Your main focus should be on doing the QA for specific changes unless explicitly
    `prefers-reduced-motion` implemented
 6. **Hygiene**: no dead code, unused imports/deps, console errors, broken links
 7. **No regressions**: previously built pages still build and render
+8. **Render performance**: no obvious render slowness — flag oversized JS bundles,
+   render-blocking scripts, unoptimized images, or layout thrash. The page must be
+   quick to first paint and interaction (this page is statically prerendered; if
+   something is forcing slow client render, that is at least a minor, usually a blocker).
+
+## UX checklist
+1. Execute the page's key workflows the way the ICP actually would — continuous human-paced input only: stepped mouse movement (no teleported hover/click), realistic wheel scrolling with pauses, dwell times before clicks, and touch taps at mobile width. Trackpad momentum can't be reproduced headlessly — approximate with varied wheel deltas. Run the standard journey (nav dropdown → move into it → click item → back; scroll every section; open FAQ items; hit the CTA) plus a free exploratory pass; capture at decision moments. Any workflow that breaks mid-flow or makes the ICP retry/hesitate is a blocker. Never judge hover scroll-dependent UI from teleported gestures.
+
+2. The manner in which the text appears in each line, the spacings between different container, spacing within containers, the effort user would have to put in to view various sections of the page, how seamless it is, all of that counts and you need to ensure all of those things are taken care of or else blatantky flag issues without hesitation. Ensure typographic hygiene (no orphan/dangling words, consistent leading, clean line breaks), spacing discipline (grid rhythm, even container padding, section rhythm), hierarchy (one focal point per section), interaction hygiene (no dead hover zones,predictable states).
+
+3. Before shipping any multi-paragraph layout, check: do all text blocks inlcudig heading and sub heading use the same alignment AND the same max-width? If not, fix it — inconsistent block widths are the #1 cause of a layout looking like "pasted-together sections" instead of one designed unit.
 
 ## Checklist — visual (screenshot-based)
 Start the dev server, capture the actual rendered page, and look at it as a real
 visitor would — this is a distinct pass from reading code, not a formality.
 
-1. Capture screenshots at: mobile (375px), tablet (768px), desktop (1440px) —
-   both light and dark mode, full page (not just above-the-fold)
+Mandatory capture protocol: 
+
+(a) full-page at 375/768/1440 px (layout only), 
+(b) every section of page captured individually at 1:1 , scrolling first so scroll-reveal fires, clipping each section's bounds, and viewing every capture (no skipping)
+
+For both of the above check properly,
+
 2. **Layout integrity**: nothing overlapping, clipped, overflowing its container, or
    collapsing unexpectedly; images loaded (not broken/placeholder icons) and not
    stretched/distorted/wrong aspect ratio
@@ -49,6 +65,25 @@ visitor would — this is a distinct pass from reading code, not a formality.
    legible at a glance?
 6. **Cross-viewport consistency**: does the design intent survive at all three sizes,
    or does something that reads fine on desktop become awkward/broken on mobile?
+7. **From the lens of the ICP of this business**: For every section,
+   section the way ICP scrolling on their phone, laptop would, then answer honestly:
+   would they call this section pathetic / cheap / AI-generated, or would it persuade them to take action ? Flag anything that looks like filler, mock-UI decoration, or design-by-template, and name what is wrong with it. 
+   
+   Each section of the page should actually look like it has been designed to perfection by an experienced designer from the organisation, should feel premium and elegant.
+
+- Vision rules: judge legibility/composition from the 1:1 section captures; if text can't be read in the capture → illegible (blocker); never infer content from code or from what a previous round said
+
+**Visual bans (OkGTM product direction — any of these is a BLOCKER. These blockers DON'T apply if the user explicitly asked to build it by giving a reference):**
+- NO diagrams, charts, graphs, or data visualizations of any kind (copy.md has no real
+  numbers to visualize — BUSINESS.md §3.4)
+- NO progress bars, stat dials, score meters, or rating widgets
+- NO illustrations or decorative artwork (no 3D render stand-ins, no clay-style mock
+  assets, no stock imagery)
+- NO workflow/pipeline diagrams with arrows ("capture → enrich → sequence" style)
+- NO fake product-UI mockups/previews inside cards or the hero (lead rows, enrichment
+  fields, sequence chips, timelines, toasts — all banned; they read as AI-BS and often
+  carry invented numbers)
+The hero and feature cards must carry the message with type, color, and spacing alone.
 
 Judge the visual pass against SKILL.md's anti-slop rules and DESIGN.md's tokens —
 flag deviations from those, not personal aesthetic preference outside them. If

@@ -21,9 +21,9 @@ const cabinetGrotesk = localFont({
 
 /* ── Metadata (verbatim from copy.md) ── */
 export const metadata: Metadata = {
-  title: "OkGTM Labs | Revenue Engine, Live in Under 23 Hours",
+  title: "OkGTM Labs | The GTM OS for B2B Teams",
   description:
-    "OkGTM Labs builds custom GTM automations across your full funnel. First MVP running in under 23 hours. Let's talk.",
+    "OkGTM builds and runs your entire go-to-market system. Lead capture, enrichment, outbound, follow-ups, handoff, and reporting. Month-to-month.",
 };
 
 export default function RootLayout({
