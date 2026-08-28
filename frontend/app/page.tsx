@@ -8,7 +8,8 @@ import { ScrollReveal } from "@/components/scroll-reveal";
 import { AmbientVideo } from "@/components/ambient-video";
 
 /* ── Shared CTA destination ── */
-const CTA_HREF = "https://linkedin.com/in/ujvalgupta";
+const WHATSAPP_HREF =
+  "https://wa.me/918081100105?text=Hi%20Ujval%2C%20I%27d%20like%20to%20talk%20about%20automating%20my%20GTM.";
 
 /* ════════════════════════════════════════════════════════════
    Feature card data (verbatim from copy.md §3)
@@ -63,7 +64,7 @@ const features = [
     body: "When a lead is ready, it moves into your CRM with full history attached: enrichment data, sequence activity, engagement signals. Works with HubSpot, Salesforce, Clay, and AI-native CRMs. Your sales team picks up where the system left off.",
     bgClass: "bg-brand-ochre",
     textClass: "text-ink",
-    colSpan: "lg:col-span-2",
+    colSpan: "",
     featured: false,
     standoutLine: "",
   },
@@ -73,7 +74,7 @@ const features = [
     body: "Track performance across every stage of your funnel from one view. Understand where leads convert, where they stall, and which automations drive pipeline forward.",
     bgClass: "bg-surface-card",
     textClass: "text-ink",
-    colSpan: "",
+    colSpan: "lg:col-span-2",
     featured: false,
     standoutLine: "",
   },
@@ -172,7 +173,9 @@ export default function HomePage() {
               style={{ "--hero-delay": "240ms" } as React.CSSProperties}
             >
               <a
-                href={CTA_HREF}
+                href={WHATSAPP_HREF}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="inline-flex h-11 items-center rounded-[12px] bg-primary px-5 text-sm font-semibold text-on-primary transition-colors hover:bg-primary-active active:scale-[0.98]"
               >
                 Let&apos;s talk
@@ -438,7 +441,9 @@ export default function HomePage() {
             </p>
             <div className="mt-8">
               <a
-                href={CTA_HREF}
+                href={WHATSAPP_HREF}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="inline-flex h-11 items-center rounded-[12px] bg-primary px-5 text-sm font-semibold text-on-primary transition-colors hover:bg-primary-active active:scale-[0.98]"
               >
                 Let&apos;s talk

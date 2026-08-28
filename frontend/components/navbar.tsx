@@ -11,7 +11,8 @@ import {
   X,
 } from "@phosphor-icons/react";
 
-const CTA_HREF = "https://linkedin.com/in/ujvalgupta";
+const WHATSAPP_HREF =
+  "https://wa.me/918081100105?text=Hi%20Ujval%2C%20I%27d%20like%20to%20talk%20about%20automating%20my%20GTM.";
 
 /* ── Resources dropdown items (platform-wide nav destinations) ── */
 const resourceLinks = [
@@ -157,7 +158,7 @@ export function Navbar() {
 
         {/* Desktop CTA */}
         <a
-          href={CTA_HREF}
+          href={WHATSAPP_HREF}
           target="_blank"
           rel="noopener noreferrer"
           className="hidden h-11 items-center rounded-[12px] bg-primary px-5 text-sm font-semibold text-on-primary transition-colors hover:bg-primary-active md:inline-flex"
@@ -168,7 +169,7 @@ export function Navbar() {
         {/* Mobile: CTA + hamburger */}
         <div className="flex items-center gap-2 md:hidden">
           <a
-            href={CTA_HREF}
+            href={WHATSAPP_HREF}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex h-11 items-center rounded-[12px] bg-primary px-4 text-sm font-semibold text-on-primary transition-colors hover:bg-primary-active"

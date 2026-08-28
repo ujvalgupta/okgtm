@@ -218,7 +218,7 @@ export default function PostSpyForm() {
 
   if (step === "email") {
     return (
-      <form className="rounded-[16px] border border-hairline bg-canvas p-6 md:p-8" onSubmit={handleEmailSubmit}>
+      <form onSubmit={handleEmailSubmit}>
         <p className="text-xs font-semibold uppercase tracking-[1.5px] text-muted-foreground">One more step</p>
         <p className="mt-3 mb-5 text-sm leading-relaxed text-body">
           Enter your email and we&apos;ll send a code to verify it before running the analysis.
@@ -250,7 +250,7 @@ export default function PostSpyForm() {
 
   if (step === "otp") {
     return (
-      <form className="rounded-[16px] border border-hairline bg-canvas p-6 md:p-8" onSubmit={handleOtpSubmit}>
+      <form onSubmit={handleOtpSubmit}>
         <p className="text-xs font-semibold uppercase tracking-[1.5px] text-muted-foreground">Verify your email</p>
         <p className="mt-3 mb-5 text-sm leading-relaxed text-body">We sent a 6-digit code to {email}.</p>
         {error && <p className="mb-4 text-sm font-medium text-error">{error}</p>}
@@ -280,7 +280,7 @@ export default function PostSpyForm() {
   }
 
   return (
-    <form className="rounded-[16px] border border-hairline bg-canvas p-6 md:p-8" onSubmit={handleStart}>
+    <form onSubmit={handleStart}>
       {error && <p className="mb-4 text-sm font-medium text-error">{error}</p>}
       <div className="space-y-2">
         <label className="block text-sm font-semibold text-ink" htmlFor="postspy-profile-url">
@@ -296,12 +296,14 @@ export default function PostSpyForm() {
           onChange={(e) => setProfileUrl(e.target.value)}
         />
       </div>
-      <button
-        type="submit"
-        className="mt-5 inline-flex h-11 w-full items-center justify-center rounded-[12px] bg-primary px-5 text-sm font-semibold text-on-primary transition-colors hover:bg-primary-active active:scale-[0.98]"
-      >
-        Analyze their posts
-      </button>
+      <div className="mt-4 flex justify-end">
+        <button
+          type="submit"
+          className="inline-flex h-9 items-center rounded-[12px] bg-primary px-4 text-sm font-semibold text-on-primary transition-colors hover:bg-primary-active active:scale-[0.98]"
+        >
+        Analyze
+          </button>
+      </div>
     </form>
   );
 }

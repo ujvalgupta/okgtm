@@ -32,7 +32,8 @@ export async function generateMetadata({
 }
 
 /* ── CTA destination ── */
-const CTA_HREF = "https://linkedin.com/in/ujvalgupta";
+const WHATSAPP_HREF =
+  "https://wa.me/918081100105?text=Hi%20Ujval%2C%20I%27d%20like%20to%20talk%20about%20automating%20my%20GTM.";
 
 /* ════════════════════════════════════════════════════════════
    Page
@@ -111,7 +112,7 @@ export default async function ToolPage({
               id="what-it-does-heading"
               className="text-balance font-display text-[28px] font-medium leading-[1.1] tracking-[-0.5px] text-ink md:text-[40px] md:tracking-[-1px]"
             >
-              What it does
+              What it does?
             </h2>
             <p className="mt-6 text-pretty text-base leading-relaxed text-body">
               {tool.whatItDoes}
@@ -126,12 +127,12 @@ export default async function ToolPage({
         aria-labelledby="how-it-works-heading"
       >
         <div className="mx-auto max-w-[1280px] px-6">
-          <ScrollReveal>
+          <ScrollReveal className="text-center">
             <h2
               id="how-it-works-heading"
               className="font-display text-[28px] font-medium leading-[1.1] tracking-[-0.5px] text-ink md:text-[40px] md:tracking-[-1px]"
             >
-              How it works
+              How it works?
             </h2>
           </ScrollReveal>
 
@@ -160,12 +161,12 @@ export default async function ToolPage({
         aria-labelledby="what-you-get-heading"
       >
         <div className="mx-auto max-w-[1280px] px-6">
-          <ScrollReveal>
+          <ScrollReveal className="text-center">
             <h2
               id="what-you-get-heading"
               className="font-display text-[28px] font-medium leading-[1.1] tracking-[-0.5px] text-ink md:text-[40px] md:tracking-[-1px]"
             >
-              What you get
+              What you get?
             </h2>
           </ScrollReveal>
 
@@ -233,7 +234,7 @@ export default async function ToolPage({
             </p>
             <div className="mt-8">
               <a
-                href={CTA_HREF}
+                href={WHATSAPP_HREF}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex h-11 items-center rounded-[12px] bg-primary px-5 text-sm font-semibold text-on-primary transition-colors hover:bg-primary-active active:scale-[0.98]"

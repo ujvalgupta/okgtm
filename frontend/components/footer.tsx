@@ -1,14 +1,46 @@
 "use client";
 
-import { LinkedinLogo, PaperPlaneTilt } from "@phosphor-icons/react";
+import {
+  LinkedinLogo,
+  PaperPlaneTilt,
+  WhatsappLogo,
+  XLogo,
+} from "@phosphor-icons/react";
 
-const CTA_HREF = "https://linkedin.com/in/ujvalgupta";
+const LINKEDIN_HREF = "https://linkedin.com/in/ujvalgupta";
+const X_HREF = "https://x.com/justujval";
+const WHATSAPP_HREF =
+  "https://wa.me/918081100105?text=Hi%20Ujval%2C%20I%27d%20like%20to%20talk%20about%20automating%20my%20GTM.";
 
 const exploreLinks = [
   { label: "Home", href: "/" },
   { label: "Dashboard", href: "/dashboard" },
   { label: "Free tools", href: "/free-tools" },
   { label: "Blog", href: "/blog" },
+] as const;
+
+const contactLinks = [
+  { label: "LinkedIn", href: LINKEDIN_HREF },
+  { label: "X", href: X_HREF },
+  { label: "WhatsApp", href: WHATSAPP_HREF },
+] as const;
+
+const socials = [
+  {
+    label: "Connect on LinkedIn",
+    href: LINKEDIN_HREF,
+    icon: <LinkedinLogo size={18} weight="fill" />,
+  },
+  {
+    label: "Follow on X",
+    href: X_HREF,
+    icon: <XLogo size={18} weight="fill" />,
+  },
+  {
+    label: "Chat on WhatsApp",
+    href: WHATSAPP_HREF,
+    icon: <WhatsappLogo size={18} weight="fill" />,
+  },
 ] as const;
 
 export function Footer() {
@@ -23,7 +55,7 @@ export function Footer() {
             </h2>
             <p className="mx-auto mt-4 max-w-[300px] text-sm leading-relaxed text-muted-foreground">
               GTM systems that run your funnel, not your patience. Get the latest
-              from the OkGTM Labs in your inbox.
+              from the OkGTM lab in your inbox.
             </p>
             <form
               className="relative mx-auto mt-6 max-w-[320px]"
@@ -70,22 +102,17 @@ export function Footer() {
           <div>
             <h3 className="text-base font-semibold text-ink">Get in touch</h3>
             <nav className="mt-4 space-y-2.5 text-sm" aria-label="Footer contact links">
-              <a
-                href={CTA_HREF}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block text-muted-foreground transition-colors hover:text-ink"
-              >
-                Let&apos;s talk
-              </a>
-              <a
-                href={CTA_HREF}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block text-muted-foreground transition-colors hover:text-ink"
-              >
-                LinkedIn profile
-              </a>
+              {contactLinks.map((link) => (
+                <a
+                  key={link.href}
+                  href={link.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block text-muted-foreground transition-colors hover:text-ink"
+                >
+                  {link.label}
+                </a>
+              ))}
             </nav>
           </div>
 
@@ -93,16 +120,19 @@ export function Footer() {
           <div>
             <h3 className="text-base font-semibold text-ink">Follow us</h3>
             <div className="mt-4 flex justify-center gap-3">
-              <a
-                href={CTA_HREF}
-                target="_blank"
-                rel="noopener noreferrer"
-                title="Connect on LinkedIn"
-                aria-label="Connect on LinkedIn"
-                className="flex h-10 w-10 items-center justify-center rounded-full border border-hairline bg-canvas text-ink transition-colors hover:bg-surface-card"
-              >
-                <LinkedinLogo size={18} weight="fill" />
-              </a>
+              {socials.map((s) => (
+                <a
+                  key={s.href}
+                  href={s.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  title={s.label}
+                  aria-label={s.label}
+                  className="flex h-10 w-10 items-center justify-center rounded-full border border-hairline bg-canvas text-ink transition-colors hover:bg-surface-card"
+                >
+                  {s.icon}
+                </a>
+              ))}
             </div>
           </div>
         </div>

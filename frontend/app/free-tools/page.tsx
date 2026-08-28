@@ -12,7 +12,8 @@ export const metadata: Metadata = {
 };
 
 /* ── CTA destination ── */
-const CTA_HREF = "https://linkedin.com/in/ujvalgupta";
+const WHATSAPP_HREF =
+  "https://wa.me/918081100105?text=Hi%20Ujval%2C%20I%27d%20like%20to%20talk%20about%20automating%20my%20GTM.";
 
 /* ════════════════════════════════════════════════════════════
    Live Tool Card
@@ -129,7 +130,7 @@ export default function FreeToolsPage() {
             </p>
             <div className="mt-8">
               <a
-                href={CTA_HREF}
+                href={WHATSAPP_HREF}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex h-11 items-center rounded-[12px] bg-primary px-5 text-sm font-semibold text-on-primary transition-colors hover:bg-primary-active active:scale-[0.98]"
