@@ -1,7 +1,7 @@
 packages:
-  - frontend
-  - frontend/.pi/scripts
+  - .pi/scripts
 allowBuilds:
+  esbuild: true
   puppeteer: true
   sharp: true
   unrs-resolver: true

@@ -452,3 +452,8 @@ storage/
 .local-data/
 .dev/
 .dev-data/
+
+# session shell cwd placeholder (remove with pi session restart)
+frontend/.session-cwd-placeholder
+
+# convex generated files (regenerate via npx convex dev)

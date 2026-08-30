@@ -85,7 +85,7 @@ write it plainly.)
 1.2 **What category do we claim?** "GTM automation platform" · "funnel automation" ·
 "AI GTM copilot" · "revenue automation" · "GTM system" (the competitors' term) · other?
 One word here cascades through every page's eyebrow/hero/meta.
---> "OkGTM Labs"
+--> "OkGTM"
 
 1.3 **Is the core offer "automations across funnel stages" — or is there a sharper
 frame?** e.g. "your GTM runs itself," "no more spreadsheets," "one system from lead to
