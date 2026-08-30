@@ -44,7 +44,7 @@ export const liveTools: FreeTool[] = [
     ],
     heroH1: "See every LinkedIn ad your competitor is running",
     heroSubhead:
-      "Type in a company name. We pull their active ads from the LinkedIn Ad Library and give you an AI breakdown of what their ad strategy looks like.",
+      "Paste a company's LinkedIn page URL. We pull their active ads from the LinkedIn Ad Library and give you an AI breakdown of what their ad strategy looks like.",
     whatItDoes:
       "LinkedIn Ad Spy searches the LinkedIn Ad Library for a competitor\u2019s active campaigns and pulls up to 10 live ads in a single search. On top of the raw ads, you get an AI-generated summary that breaks down their messaging angles, creative patterns, and likely targeting approach. The whole thing takes about a minute.",
     howItWorks: [

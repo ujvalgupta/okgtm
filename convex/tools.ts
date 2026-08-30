@@ -22,9 +22,10 @@ const TOOL_NAMES: Record<string, string> = {
   "lead-journey-finder": "Lead Journey Finder",
 };
 
-/** Tools whose gate input is a LinkedIn URL (ad-spy takes a company name). */
+/** Tools whose gate input is a LinkedIn URL. */
 const URL_INPUT_TOOLS = new Set([
   "linkedin-post-spy",
+  "linkedin-ad-spy", // company page URL, e.g. linkedin.com/company/acme
   "steal-competitor-leads",
   "find-lost-leads",
   "competitor-engagement-spy",
@@ -66,10 +67,6 @@ export const requestAnalysis = mutation({
       try {
         inputs.profileUrl = normalizeLinkedInUrl(inputs.profileUrl ?? "");
       } catch {
-        return { ok: false as const, error: "invalid_url" as const };
-      }
-    } else if (args.tool === "linkedin-ad-spy") {
-      if (!(inputs.company ?? "").trim()) {
         return { ok: false as const, error: "invalid_url" as const };
       }
     } else {
@@ -155,7 +152,7 @@ async function fetchToolData(
     }
     case "linkedin-ad-spy": {
       const jobId = await runAgent("linkedin", "ads-library", {
-        urls: inputs.company,
+        urls: inputs.profileUrl, // company page URL, e.g. linkedin.com/company/acme
         maxResults: 5,
       });
       return waitForResults(jobId);

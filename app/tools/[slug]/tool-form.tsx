@@ -20,9 +20,8 @@ const toolProps: Record<
   },
   "linkedin-ad-spy": {
     toolName: "LinkedIn Ad Spy",
-    inputLabel: "Competitor's company name",
-    inputPlaceholder: "Acme Inc",
-    inputType: "name",
+    inputLabel: "Competitor's company LinkedIn URL",
+    inputPlaceholder: "linkedin.com/company/acme",
   },
   "steal-competitor-leads": {
     toolName: "Steal Competitor Leads",
