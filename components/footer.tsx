@@ -11,7 +11,7 @@ const WHATSAPP_HREF =
 
 const exploreLinks = [
   { label: "Home", href: "/" },
-  { label: "Free tools", href: "/free-tools" },
+  { label: "Free tools", href: "/tools" },
 ] as const;
 
 const contactLinks = [

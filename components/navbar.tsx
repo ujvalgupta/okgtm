@@ -19,7 +19,7 @@ const resourceLinks: readonly NavLink[] = [
   {
     title: "Free tools",
     description: "Useful GTM tools, free to use",
-    href: "/free-tools",
+    href: "/tools",
     icon: <Wrench size={20} weight="duotone" />,
   },
 ];

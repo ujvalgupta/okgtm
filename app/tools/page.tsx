@@ -23,7 +23,7 @@ function LiveToolCard({ tool, index }: { tool: FreeTool; index: number }) {
     <ScrollReveal delay={index * 60} className="flex flex-col">
       {/* Whole card is the link to the tool page */}
       <Link
-        href={`/free-tools/${tool.slug}`}
+        href={`/tools/${tool.slug}`}
         className="flex h-full flex-col rounded-[24px] bg-surface-card p-8 transition-colors hover:bg-surface-strong focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink/30"
       >
         {/* Name */}

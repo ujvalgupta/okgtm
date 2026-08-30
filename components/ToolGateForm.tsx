@@ -289,7 +289,7 @@ function GateFormInner(props: {
             <p className="text-sm font-medium text-error">{status.message}</p>
           )}
           <Link
-            href="/free-tools"
+            href="/tools"
             className="inline-flex h-9 items-center rounded-[12px] bg-primary px-4 text-sm font-semibold text-on-primary transition-colors hover:bg-primary-active active:scale-[0.98]"
           >
             Try other tools

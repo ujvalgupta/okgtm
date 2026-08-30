@@ -39,6 +39,13 @@ const nextConfig: NextConfig = {
       { source: "/:path*", headers: securityHeaders },
     ];
   },
+  // Old /free-tools URLs keep working (bookmarks, shared links).
+  async redirects() {
+    return [
+      { source: "/free-tools/:path*", destination: "/tools/:path*", permanent: true },
+      { source: "/free-tools", destination: "/tools", permanent: true },
+    ];
+  },
 };
 
 export default nextConfig;
