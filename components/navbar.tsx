@@ -166,14 +166,6 @@ export function Navbar() {
             setOpen={setResourcesOpen}
             align="center"
           />
-          <a
-            href="https://labs.okgtm.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex h-10 items-center rounded-[12px] border border-hairline px-4 text-sm font-medium text-muted-foreground transition-colors hover:bg-surface-soft hover:text-ink"
-          >
-            Labs
-          </a>
         </div>
 
         {/* Desktop CTA */}
@@ -208,19 +200,9 @@ export function Navbar() {
         </div>
       </nav>
 
-      {/* Mobile panel: Labs + Resources */}
+      {/* Mobile panel: Resources */}
       {mobileOpen && (
         <div className="border-t border-hairline bg-canvas px-6 pb-6 pt-4 md:hidden">
-          <a
-            href="https://labs.okgtm.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={() => setMobileOpen(false)}
-            className="flex h-11 items-center justify-center rounded-[12px] border border-hairline text-sm font-semibold text-ink transition-colors hover:bg-surface-soft"
-          >
-            Labs
-          </a>
-
           <p className="mt-6 text-xs font-semibold uppercase tracking-[1.5px] text-muted-foreground">
             Resources
           </p>
