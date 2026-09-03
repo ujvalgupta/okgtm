@@ -1,0 +1,32 @@
+/**
+ * DNS + TLS helpers with graceful failure (never throw into checks).
+ */
+
+import dns from "node:dns/promises";
+import tls from "node:tls";
+
+export async function dnsLookup(hostname: string): Promise<{ ok: boolean; error?: string }> {
+  try {
+    await dns.lookup(hostname);
+    return { ok: true };
+  } catch (error) {
+    return { ok: false, error: error instanceof Error ? error.message : String(error) };
+  }
+}
+
+export function tlsHandshake(hostname: string): Promise<{ ok: boolean; error?: string }> {
+  return new Promise((resolve) => {
+    const socket = tls.connect(
+      { host: hostname, port: 443, servername: hostname, rejectUnauthorized: true },
+      () => {
+        socket.end();
+        resolve({ ok: true });
+      }
+    );
+    socket.setTimeout(5000, () => {
+      socket.destroy();
+      resolve({ ok: false, error: "TLS connection timed out" });
+    });
+    socket.on("error", (error) => resolve({ ok: false, error: error.message }));
+  });
+}

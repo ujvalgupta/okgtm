@@ -2,11 +2,13 @@
 
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { useMutation } from "convex/react";
+import { useMutation, useQuery } from "convex/react";
 import { api } from "convex/_generated/api";
+import type { Id } from "convex/_generated/dataModel";
 import { isValidEmail } from "@/lib/email";
 import { isValidLinkedInUrl } from "@/lib/linkedin-url";
 import { isConvexConfigured } from "@/lib/convex";
+import { GENERIC_ERROR, RATE_LIMITED_MSG } from "@/lib/ui-copy";
 
 type Step = "url" | "email" | "done";
 type Status =
@@ -108,12 +110,23 @@ function GateFormInner(props: {
   const requestAnalysis = useMutation(api.tools.requestAnalysis);
   const urlInputRef = useRef<HTMLInputElement>(null);
   const emailInputRef = useRef<HTMLInputElement>(null);
+  const [jobId, setJobId] = useState<Id<"analysisJobs"> | null>(null);
+  // Live job status (server pushes updates — no busy polling). When the async
+  // paid pipeline fails (e.g. paid-API credits exhausted) we swap the
+  // "results on their way" promise for the generic error message.
+  const jobStatus = useQuery(api.tools.getPublicJob, jobId ? { jobId } : "skip");
 
   // Cursor goes straight into the active input (URL or email step).
   useEffect(() => {
     if (step === "url") urlInputRef.current?.focus();
     if (step === "email") emailInputRef.current?.focus();
   }, [step]);
+
+  useEffect(() => {
+    if (step === "done" && jobStatus?.status === "failed") {
+      setStatus({ kind: "error", message: GENERIC_ERROR });
+    }
+  }, [step, jobStatus, setStatus]);
 
   function handleAnalyze() {
     const input = profileUrl.trim();
@@ -134,6 +147,7 @@ function GateFormInner(props: {
       return;
     }
     setStatus({ kind: "sending" });
+    setJobId(null);
     try {
       const result = await requestAnalysis({
         email,
@@ -145,6 +159,7 @@ function GateFormInner(props: {
         hp,
       });
       if (result.ok) {
+        if (result.jobId) setJobId(result.jobId);
         setStatus({ kind: "done" });
         setStep("done");
       } else if (result.error === "rate_limited") {
@@ -156,10 +171,10 @@ function GateFormInner(props: {
         setUrlError("Enter a valid LinkedIn profile or company URL.");
         setStep("url");
       } else {
-        setStatus({ kind: "error", message: "Something went wrong. Please try again." });
+        setStatus({ kind: "error", message: GENERIC_ERROR });
       }
     } catch {
-      setStatus({ kind: "error", message: "Something went wrong. Please try again." });
+      setStatus({ kind: "error", message: GENERIC_ERROR });
     }
   }
 
@@ -262,6 +277,7 @@ function GateFormInner(props: {
               onClick={() => {
                 setUrlError(null);
                 setStatus({ kind: "idle" });
+                setJobId(null);
                 setStep("url");
               }}
               className="inline-flex h-9 items-center rounded-[12px] bg-primary px-4 text-sm font-semibold text-on-primary transition-colors hover:bg-primary-active active:scale-[0.98]"
@@ -282,7 +298,7 @@ function GateFormInner(props: {
           )}
           {status.kind === "rate_limited" && (
             <p className="text-sm text-body">
-              Please try again in some time.
+              {RATE_LIMITED_MSG}
             </p>
           )}
           {status.kind === "error" && (
@@ -301,7 +317,7 @@ function GateFormInner(props: {
         <p className="text-center text-sm font-medium text-error">
           {status.kind === "error"
             ? status.message
-            : "Please try again in some time."}
+            : RATE_LIMITED_MSG}
         </p>
       )}
     </div>

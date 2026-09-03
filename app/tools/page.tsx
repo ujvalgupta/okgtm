@@ -6,9 +6,9 @@ import type { FreeTool } from "@/lib/free-tools";
 
 /* ── Meta (verbatim from copy.md) ── */
 export const metadata: Metadata = {
-  title: "Free LinkedIn Intelligence Tools | OkGTM",
+  title: "Free GTM Tools | OkGTM",
   description:
-    "Six free LinkedIn tools to spy on competitor ads, steal warm leads, and decode content strategies. Results delivered to your inbox.",
+    "Free GTM tools: spy on competitor LinkedIn ads and posts, recover warm leads, and audit your cold email infrastructure before you send. No catch.",
 };
 
 /* ── CTA destination ── */
@@ -71,7 +71,7 @@ export default function FreeToolsPage() {
               className="hero-enter text-xs font-semibold uppercase tracking-[1.5px] text-muted-foreground"
               style={{ "--hero-delay": "0ms" } as React.CSSProperties}
             >
-              FREE TOOLS
+              FREE GTM TOOLS
             </p>
 
             {/* Headline */}
@@ -80,32 +80,15 @@ export default function FreeToolsPage() {
               className="hero-enter mt-5 text-balance font-display text-[32px] font-medium leading-[1.05] tracking-[-0.5px] text-ink md:text-[40px] md:tracking-[-1px] lg:text-[52px] lg:tracking-[-2px]"
               style={{ "--hero-delay": "80ms" } as React.CSSProperties}
             >
-              Know what your competitors are doing on&nbsp;LinkedIn
+              Free GTM tools that get you closer to a reply
             </h1>
-
-            {/* Subhead */}
-            <p
-              className="hero-enter mx-auto mt-6 max-w-[480px] text-pretty text-base leading-relaxed text-body md:text-lg"
-              style={{ "--hero-delay": "160ms" } as React.CSSProperties}
-            >
-              Six tools. Paste a URL, share your email, and get answers delivered to your&nbsp;inbox.
-            </p>
-
-            {/* Friction-killer microcopy */}
-            <p
-              className="hero-enter mx-auto mt-3 max-w-[480px] text-pretty text-sm leading-relaxed text-muted-foreground"
-              style={{ "--hero-delay": "220ms" } as React.CSSProperties}
-            >
-              Every tool is free to use, right now. No account, no credit card. Results are emailed to&nbsp;you.
-            </p>
           </div>
         </div>
       </section>
 
-      {/* ═══════════════ TOOLS GRID ═══════════════ */}
+      {/* ═══════════════ TOOLS GRID — newest first ═══════════════ */}
       <section className="bg-surface-soft py-24" aria-label="Free tools">
         <div className="mx-auto max-w-[1280px] px-6">
-          {/* Live tools — 6 cards, 3-up desktop / 2-up tablet / 1-up mobile */}
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
             {liveTools.map((tool, i) => (
               <LiveToolCard key={tool.slug} tool={tool} index={i} />

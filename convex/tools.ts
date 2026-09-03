@@ -1,5 +1,6 @@
 import {
   mutation,
+  query,
   internalAction,
   internalMutation,
   internalQuery,
@@ -50,7 +51,7 @@ export const requestAnalysis = mutation({
   handler: async (ctx, args) => {
     // 0. honeypot — bots that fill the hidden field get a silent fake-ok
     if (args.hp && args.hp.length > 0) {
-      return { ok: true as const };
+      return { ok: true as const, jobId: null as null };
     }
 
     const email = normalizeEmail(args.email);
@@ -260,6 +261,20 @@ export const getJob = internalQuery({
   args: { jobId: v.id("analysisJobs") },
   handler: async (ctx, args) => {
     return ctx.db.get(args.jobId);
+  },
+});
+
+/**
+ * Public status for a submitted job. Exposes ONLY the status — never the
+ * inputs, email, or persisted error text. Used by the tool gate so a failed
+ * run (e.g. paid API credits exhausted) surfaces a generic message instead of
+ * a silent "results on their way" promise.
+ */
+export const getPublicJob = query({
+  args: { jobId: v.id("analysisJobs") },
+  handler: async (ctx, args) => {
+    const job = await ctx.db.get(args.jobId);
+    return { status: job?.status ?? null };
   },
 });
 

@@ -9,8 +9,11 @@ import {
 import { ScrollReveal } from "@/components/scroll-reveal";
 import { liveTools, getToolBySlug } from "@/lib/free-tools";
 import ToolForm from "./tool-form";
+import EmailAuditForm from "@/components/email-audit-form";
+import GeoAuditForm from "@/components/geo-audit-form";
+import EmailPredictForm from "@/components/email-predict-form";
 
-/* ── Static params for the 6 live tools ── */
+/* ── Static params for the live tools ── */
 export function generateStaticParams() {
   return liveTools.map((t) => ({ slug: t.slug }));
 }
@@ -25,7 +28,7 @@ export async function generateMetadata({
   const tool = getToolBySlug(slug);
   if (!tool) return {};
   return {
-    title: `${tool.name} - Free LinkedIn Tool | OkGTM`,
+    title: `${tool.name} - Free GTM Tool | OkGTM`,
     description: tool.metaDescription,
   };
 }
@@ -46,6 +49,10 @@ export default async function ToolPage({
   const tool = getToolBySlug(slug);
   if (!tool) notFound();
 
+  // Tools that show results on the page (not emailed) get the full page
+  // width for their workspace instead of a narrow center column.
+  const isResultTool = slug === "email-audit" || slug === "geo-audit" || slug === "email-predict";
+
   return (
     <>
       {/* ═══════════════ 1. HERO ═══════════════ */}
@@ -54,7 +61,7 @@ export default async function ToolPage({
         aria-labelledby="tool-heading"
       >
         <div className="mx-auto w-full max-w-[1280px] px-6">
-          <div className="mx-auto max-w-[640px] text-center">
+          <div className="mx-auto max-w-[860px] text-center">
             {/* Eyebrow */}
             <p
               className="hero-enter text-xs font-semibold uppercase tracking-[1.5px] text-muted-foreground"
@@ -72,9 +79,9 @@ export default async function ToolPage({
               {tool.heroH1}
             </h1>
 
-            {/* Subhead */}
+            {/* Subhead — wide measure so long descriptive copy breathes */}
             <p
-              className="hero-enter mx-auto mt-6 max-w-[480px] text-pretty text-base leading-relaxed text-body md:text-lg"
+              className="hero-enter mx-auto mt-6 max-w-[700px] text-pretty text-base leading-relaxed text-body md:text-lg md:leading-relaxed"
               style={{ "--hero-delay": "160ms" } as React.CSSProperties}
             >
               {tool.heroSubhead}
@@ -88,13 +95,27 @@ export default async function ToolPage({
       {/* ═══════════════ 2. EMBEDDED TOOL FORM ═══════════════ */}
       <section
         id="try-it"
-        className="bg-canvas pb-24"
+        className={`${isResultTool ? "bg-canvas pb-12 pt-4" : "bg-canvas pb-24"}`}
         aria-label={`Try ${tool.name}`}
       >
-        <div className="mx-auto w-full max-w-[520px] px-6">
+        <div
+          className={`mx-auto w-full px-6 ${isResultTool ? "max-w-[1180px]" : "max-w-[520px]"}`}
+        >
           <ScrollReveal>
-            <div className="rounded-[24px] bg-surface-soft p-6 md:p-8">
-              <ToolForm slug={slug} />
+            <div
+              className={`rounded-[24px] bg-surface-soft ${
+                isResultTool ? "p-4 sm:p-6 md:p-10" : "p-6 md:p-8"
+              }`}
+            >
+              {slug === "email-audit" ? (
+                <EmailAuditForm />
+              ) : slug === "geo-audit" ? (
+                <GeoAuditForm />
+              ) : slug === "email-predict" ? (
+                <EmailPredictForm />
+              ) : (
+                <ToolForm slug={slug} />
+              )}
             </div>
           </ScrollReveal>
         </div>

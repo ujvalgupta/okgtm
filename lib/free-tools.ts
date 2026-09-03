@@ -8,6 +8,10 @@
 /* ── Live tool type ── */
 export interface FreeTool {
   slug: string;
+  /** ISO date (YYYY-MM-DD) the tool shipped. */
+  addedAt: string;
+  /** Lower = shown closer to the top. Newest tool gets the lowest number. */
+  sortOrder: number;
   name: string;
   tagline: string;
   features: string[];
@@ -31,9 +35,11 @@ export interface FreeTool {
    6 Live Tools
    ════════════════════════════════════════════════════════════ */
 
-export const liveTools: FreeTool[] = [
+const TOOLS: FreeTool[] = [
   {
     slug: "linkedin-ad-spy",
+    sortOrder: 10,
+    addedAt: "2026-08-26",
     name: "LinkedIn Ad Spy",
     tagline:
       "Pull every ad a competitor is running on LinkedIn and get an AI read on their strategy.",
@@ -98,6 +104,8 @@ export const liveTools: FreeTool[] = [
   },
   {
     slug: "linkedin-post-spy",
+    sortOrder: 11,
+    addedAt: "2026-08-26",
     name: "LinkedIn Post Spy",
     tagline:
       "See what a competitor is posting on LinkedIn and how their content strategy holds together.",
@@ -162,6 +170,8 @@ export const liveTools: FreeTool[] = [
   },
   {
     slug: "steal-competitor-leads",
+    sortOrder: 12,
+    addedAt: "2026-08-26",
     name: "Steal Competitor Leads",
     tagline:
       "Find the people already commenting on a competitor\u2019s posts. They\u2019re warm. They just don\u2019t know you yet.",
@@ -228,6 +238,8 @@ export const liveTools: FreeTool[] = [
   },
   {
     slug: "find-lost-leads",
+    sortOrder: 13,
+    addedAt: "2026-08-26",
     name: "Find Lost Leads",
     tagline:
       "Resurface people who commented on your LinkedIn posts and never heard back from you.",
@@ -294,6 +306,8 @@ export const liveTools: FreeTool[] = [
   },
   {
     slug: "competitor-engagement-spy",
+    sortOrder: 14,
+    addedAt: "2026-08-26",
     name: "Competitor Engagement Spy",
     tagline:
       "See whose posts your competitor is commenting on. That\u2019s who they\u2019re warming up before the pitch.",
@@ -360,6 +374,8 @@ export const liveTools: FreeTool[] = [
   },
   {
     slug: "lead-journey-finder",
+    sortOrder: 15,
+    addedAt: "2026-08-26",
     name: "Lead Journey Finder",
     tagline:
       "See what your lead actually engages with on LinkedIn, so you can start a conversation that matters.",
@@ -425,7 +441,210 @@ export const liveTools: FreeTool[] = [
     metaDescription:
       "See the last 5 posts your lead commented on. Build a warmer intro before you ever reach out. Free.",
   },
+  {
+    slug: "email-audit",
+    sortOrder: 3,
+    addedAt: "2026-09-03",
+    name: "Cold Email Auditor",
+    tagline:
+      "Check your domain's email infrastructure before you send. MX, SPF, DKIM, DMARC and MTA-STS, scored in seconds.",
+    features: [
+      "Live DNS audit of MX, SPF, DKIM, DMARC, MTA-STS and more",
+      "One weighted score with raw evidence on every finding",
+      "Runs instantly on the page. No email capture needed",
+    ],
+    heroH1: "Audit your cold email setup before you hit send",
+    heroSubhead:
+      "Paste your domain. We check the public DNS and HTTPS records that decide whether mail servers will trust your sending domain. Results in seconds, right on this page.",
+    whatItDoes:
+      "Cold Email Auditor reads the public records that control whether mail servers trust your domain: MX routing, SPF policy and its recursive include chain, DKIM keys across common selectors, your DMARC policy and reporting, MTA-STS over HTTPS, TLS-RPT, DNSSEC, and reverse DNS. Every finding is backed by the exact records we read, and the whole thing runs in under ten seconds.",
+    howItWorks: [
+      {
+        title: "Type your domain.",
+        body: "A bare domain or a full URL both work. No signup, no email address, no catch.",
+      },
+      {
+        title: "We run live DNS and HTTPS checks.",
+        body: "MX, SPF and its include chain, DKIM selectors, DMARC, MTA-STS, TLS-RPT, DNSSEC and reverse DNS. No paid APIs and no AI anywhere in the stack.",
+      },
+      {
+        title: "You get a scored report with receipts.",
+        body: "A single weighted score, a list of what to fix first, and exact DNS records you can paste at your provider.",
+      },
+    ],
+    whatYouGet: [
+      {
+        title: "A score with receipts.",
+        body: "One number plus the raw DNS records behind it. Expand any finding to see exactly what we read.",
+      },
+      {
+        title: "Fixes you can paste.",
+        body: "Actionable findings include the exact record type, hostname and value to add at your DNS provider.",
+      },
+      {
+        title: "Honest unknowns.",
+        body: "If DNS refuses to answer, we say so instead of guessing, and we never count uncertainty against your score.",
+      },
+    ],
+    faq: [
+      {
+        q: "Does a good score mean my emails will land in the inbox?",
+        a: "No. This tool audits the published infrastructure that lets mail servers verify who you are. Actual placement depends on sender reputation, content, volume and engagement, which no DNS scan can see. Treat this as an infrastructure check, not a placement guarantee.",
+      },
+      {
+        q: "Why does it say no DKIM selector was found?",
+        a: "DKIM selectors are chosen by your sending platform and are not guessable from outside. We probe the most common selectors and report what we find. We never claim DKIM is missing. Ask your email platform which selector it publishes.",
+      },
+      {
+        q: "Is the SPF fix safe to copy paste?",
+        a: "Only after you review it. Our SPF guidance lists every include and IP in your current record and warns you to preserve existing senders. Removing a service you still use breaks authentication for that sender.",
+      },
+      {
+        q: "Is this really free with no paid APIs?",
+        a: "Yes. The engine uses only public DNS lookups and a free public DNS-over-HTTPS resolver for DNSSEC records. No commercial DNS, enrichment or AI APIs are involved, and the audit works with AI fully disabled.",
+      },
+    ],
+    metaDescription:
+      "Free DNS-based audit of your domain's email infrastructure: SPF, DKIM, DMARC, MTA-STS, DNSSEC and more. No signup, results on the page in seconds.",
+  },
+  {
+    slug: "geo-audit",
+    sortOrder: 2,
+    addedAt: "2026-09-03",
+    name: "GEO & AI Crawl Checker",
+    tagline:
+      "Can AI engines find, read and cite your pages? 14 checks across 7 categories: schema, E-E-A-T, bot access, llms.txt and more.",
+    features: [
+      "Checks schema.org, E-E-A-T, robots, canonical and llms.txt",
+      "Simulates 7 AI crawlers against your page",
+      "Scored in seconds with fixes you can use",
+    ],
+    heroH1: "Can AI engines find, parse and cite your site?",
+    heroSubhead:
+      "Paste any URL. We check the signals AI engines and answer engines look for: structured data, E-E-A-T, bot access, crawl signals and content quality. Deterministic checks, scored in about 10 seconds, right on this page.",
+    whatItDoes:
+      "GEO & AI Crawl Checker runs 14 deterministic checks across 7 categories to answer one question: can AI engines find, understand and cite your page? It reads your robots.txt and simulates seven AI crawlers, parses your JSON-LD schema and E-E-A-T signals, checks canonical tags, sitemaps, llms.txt, Open Graph, content freshness and more, then samples other pages on your site for site-wide health. Two browser-level checks (JavaScript rendering and Core Web Vitals) are reported separately because they need a real browser, and they never count against your score.",
+    howItWorks: [
+      {
+        title: "Paste a URL.",
+        body: "A bare domain or a full page URL both work. No signup and nothing is stored.",
+      },
+      {
+        title: "We run 14 deterministic checks.",
+        body: "Fetchability, bot access, crawl signals, schema, E-E-A-T, content quality and a site-wide sample. No paid APIs, no AI guesses.",
+      },
+      {
+        title: "You get a score and real fixes.",
+        body: "Every finding shows why it matters and what to change, with evidence you can verify yourself.",
+      },
+    ],
+    whatYouGet: [
+      {
+        title: "A GEO score with evidence.",
+        body: "One number per page and per category, each backed by the raw responses and records we read.",
+      },
+      {
+        title: "Fixes ranked by impact.",
+        body: "Actionable findings first: add JSON-LD, allow AI crawlers, publish a sitemap, add canonical and Open Graph tags.",
+      },
+      {
+        title: "Honest unknowns.",
+        body: "Browser-only checks are labeled as not assessed instead of guessed, and never count against you.",
+      },
+    ],
+    faq: [
+      {
+        q: "Is this an SEO audit?",
+        a: "It is a GEO (generative engine optimization) audit: it checks whether AI engines and answer engines can find your page, understand its structure, and cite it as a source. Traditional SEO signals that matter to AI engines are included, but this is not a keyword or ranking tool.",
+      },
+      {
+        q: "Why does it say JavaScript rendering was not assessed?",
+        a: "That check needs to execute your page in a real browser to compare raw HTML with what actually renders, and Core Web Vitals need real page loads. This free check runs without a browser, so those two are reported as not assessed and excluded from your score instead of guessed.",
+      },
+      {
+        q: "Why does the score change if I test again?",
+        a: "It usually should not change for the same page, because every check is deterministic. Scores differ when a page serves different content to different crawlers, which the tool will flag, or when you fix a finding between runs.",
+      },
+      {
+        q: "What does it mean when an AI crawler appears blocked?",
+        a: "The tool fetches your page with each crawler's real user agent. If the response is a 401, 403 or a challenge page, that crawler is effectively blocked even when robots.txt allows it. That often comes from a bot-management layer, not from robots.txt.",
+      },
+    ],
+    metaDescription:
+      "Free GEO checker: can AI engines find, parse and cite your pages? 14 deterministic checks across schema, E-E-A-T, bot access, llms.txt and more. Results on the page.",
+  },
+  {
+    slug: "email-predict",
+    sortOrder: 1,
+    addedAt: "2026-09-03",
+    name: "Email Predictor",
+    tagline:
+      "Guess anyone's work email from their name and company domain. Up to 10 patterns, ranked by how common they are.",
+    features: [
+      "Name + domain in, up to 10 likely emails out",
+      "Patterns ranked by real-world frequency",
+      "One-click copy for each address",
+    ],
+    heroH1: "Find anyone's work email from their name alone",
+    heroSubhead:
+      "Type a person's full name and their company's domain. We generate the email patterns companies actually use, like first.last@domain and flast@domain, ranked by how common each one is. Up to 10 guesses per person, each copyable in one click.",
+    whatItDoes:
+      "Email Predictor takes a person's full name and company domain and builds the email addresses that person most likely uses, following the standard patterns companies pick when they set up mail: First.Last, first initial plus last name, First name only, and the rest of the common variations. Results are ranked by how frequently each pattern appears in real corporate directories, with the most likely candidate first. It also checks the company domain's MX records so you know whether the domain can receive mail at all before you try anything.",
+    howItWorks: [
+      {
+        title: "Enter the name and domain.",
+        body: "A full name like Jane Smith and a domain like acme.com. No account, nothing stored.",
+      },
+      {
+        title: "We build the likely patterns.",
+        body: "First.Last, flast, firstlast, f.last and the rest, up to 10, ordered by how commonly each is used in the wild.",
+      },
+      {
+        title: "We check the domain's mail setup.",
+        body: "MX records tell you if the domain can receive email at all, so you are not chasing guesses at a dead domain.",
+      },
+    ],
+    whatYouGet: [
+      {
+        title: "Up to 10 candidate addresses.",
+        body: "The full set of patterns companies actually use, not just the two obvious ones.",
+      },
+      {
+        title: "Honest ranking, not false certainty.",
+        body: "Candidates are ordered by industry frequency. The tool never claims a guess is the verified address.",
+      },
+      {
+        title: "Deliverability context.",
+        body: "A live MX check tells you whether the domain can receive mail before you invest in a send.",
+      },
+    ],
+    faq: [
+      {
+        q: "Is the first result the person's real email?",
+        a: "No. These are educated guesses based on the patterns companies most commonly use. The first one is simply the pattern that shows up most often across companies. You still need to confirm the address, for example with a bounce test or by asking, before you rely on it.",
+      },
+      {
+        q: "Which patterns does it check?",
+        a: "The ten most common industry patterns: First.Last, First name, first initial + last name, no-separator combinations, initial + last, Last.First, underscore variants, and more. If the name has a middle initial, middle-initial patterns are added in.",
+      },
+      {
+        q: "Why does it check the domain's MX records?",
+        a: "A domain without MX records cannot receive email, so every guess would bounce. The check tells you up front whether the domain is even worth trying, and it is the only server-side step, run on the domain alone. Your person's name never leaves your browser.",
+      },
+      {
+        q: "Is it okay to use this for outreach?",
+        a: "Guessing an address and then confirming it before sending is common in professional sales. What is not okay is sending to unverified guesses at scale or to people who never opted in. Use the tool to research a person you legitimately want to reach, and respect replies that ask you to stop.",
+      },
+    ],
+    metaDescription:
+      "Free email predictor: guess a work email from a full name and company domain. Up to 10 industry-standard patterns ranked by frequency, with a live MX check. Nothing stored.",
+  },
 ];
+
+/* ── Newest first — every consumer renders latest tools at the top ── */
+export const liveTools: FreeTool[] = [...TOOLS].sort(
+  (a, b) => a.sortOrder - b.sortOrder
+);
 
 /* ── Lookup helper ── */
 export function getToolBySlug(slug: string) {

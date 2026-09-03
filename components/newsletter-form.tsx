@@ -5,6 +5,7 @@ import { useMutation } from "convex/react";
 import { api } from "convex/_generated/api";
 import { isValidEmail } from "@/lib/email";
 import { isConvexConfigured } from "@/lib/convex";
+import { GENERIC_ERROR } from "@/lib/ui-copy";
 import { PaperPlaneTilt } from "@phosphor-icons/react";
 
 /**
@@ -16,6 +17,7 @@ function NewsletterFormInner() {
   const [status, setStatus] = useState<"idle" | "sending" | "done" | "error">(
     "idle"
   );
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const subscribe = useMutation(api.newsletter.subscribeNewsletter);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -23,14 +25,25 @@ function NewsletterFormInner() {
     const fd = new FormData(e.currentTarget);
     const hp = String(fd.get("hp_website") ?? "");
     if (!isValidEmail(email)) {
+      setErrorMessage("That email doesn't look right. Double-check it.");
       setStatus("error");
       return;
     }
     setStatus("sending");
     try {
       const result = await subscribe({ email, hp });
-      setStatus(result.ok ? "done" : "error");
+      if (result.ok) {
+        setStatus("done");
+      } else if (result.error === "invalid_email") {
+        setErrorMessage("That email doesn't look right. Double-check it.");
+        setStatus("error");
+      } else {
+        // Any unhandled server failure: generic message only.
+        setErrorMessage(GENERIC_ERROR);
+        setStatus("error");
+      }
     } catch {
+      setErrorMessage(GENERIC_ERROR);
       setStatus("error");
     }
   }
@@ -70,10 +83,8 @@ function NewsletterFormInner() {
       >
         <PaperPlaneTilt size={16} weight="bold" />
       </button>
-      {status === "error" && (
-        <p className="mt-2 text-xs font-medium text-error">
-          That email doesn&apos;t look right. Double-check it.
-        </p>
+      {status === "error" && errorMessage && (
+        <p className="mt-2 text-xs font-medium text-error">{errorMessage}</p>
       )}
     </form>
   );
