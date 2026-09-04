@@ -7,9 +7,12 @@ const CONVEX_URL = process.env.NEXT_PUBLIC_CONVEX_URL ?? "";
 // frame-ancestors 'none' + X-Frame-Options block clickjacking regardless.
 // connect-src allows the Convex deployment + the mailto/LinkedIn/WhatsApp/X
 // external links are navigations (form-action 'self' + default-src cover).
+// Dev-only: React devtools + Turbopack source maps need eval(); production
+// builds never use it, so 'unsafe-eval' is added only under `next dev`.
+const DEV_SCRIPT_SRC = `'self' 'unsafe-inline' ${process.env.NODE_ENV === "development" ? "'unsafe-eval'" : ""}`;
 const CSP = [
   "default-src 'self'",
-  "script-src 'self' 'unsafe-inline'",
+  `script-src ${DEV_SCRIPT_SRC}`,
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data: blob:",
   "font-src 'self' data:",
@@ -34,6 +37,9 @@ const securityHeaders = [
 
 const nextConfig: NextConfig = {
   // Next 16 uses Turbopack for both dev and production builds by default.
+  // Dev-only: let the site be checked from other hosts (Tailscale IP used
+  // during local QA) — has no effect on production builds.
+  allowedDevOrigins: ["100.94.34.56", "178.105.222.197"],
   async headers() {
     return [
       { source: "/:path*", headers: securityHeaders },
