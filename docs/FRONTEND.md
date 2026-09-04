@@ -1,5 +1,9 @@
 # OkGTM Frontend - Code Documentation
 
+> ⚠️ **SUPERSEDED.** This file documents the pre-restructure tree (`free-tools/`, per-tool
+> form components) which no longer exists. See `docs/ARCHITECTURE.md` for the current map and
+> conventions. This file is scheduled for deletion once the migration lands (restructure Step 8).
+
 ## Stack
 
 - **Framework:** Next.js 16 (App Router, React 19, RSC by default)
