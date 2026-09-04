@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { validateDomain } from "@/lib/email-audit/normalize";
-import { NodeDNSResolver } from "@/lib/email-audit/dns";
+import { api as emailPredict } from "@/features/email-predict";
 import { RateLimiter } from "@/lib/shared/rate-limit";
 import { clientIp, invalidJsonResponse, rateLimitError, readJsonBody, scheduleCleanup } from "@/lib/shared/api-route";
 import { GENERIC_ERROR } from "@/lib/ui-copy";
@@ -32,26 +31,14 @@ export async function POST(req: NextRequest) {
     return rateLimitError(limiter, ip, "Too many requests. Try again in a minute.");
   }
 
-  const validated = validateDomain(raw);
+  const validated = emailPredict.validate(raw);
   if (!validated.ok || !validated.ascii) {
     return NextResponse.json({ error: validated.error ?? "Invalid domain." }, { status: 400 });
   }
 
   try {
-    const resolver = new NodeDNSResolver();
-    const mx = await resolver.resolveMX(validated.ascii);
-    if (mx.status === "RECORD_FOUND") {
-      const hosts = mx.values.map((v) => v.replace(/^\d+\s+/, "")).slice(0, 6);
-      return NextResponse.json({ ok: true, domain: validated.ascii, mxPresent: true, mxHosts: hosts });
-    }
-    const unknown = mx.status === "TIMEOUT" || mx.status === "SERVFAIL" || mx.status === "NETWORK_ERROR";
-    return NextResponse.json({
-      ok: true,
-      domain: validated.ascii,
-      mxPresent: false,
-      mxStatus: unknown ? mx.status : "no MX records",
-      mxHosts: [],
-    });
+    const info = await emailPredict.checkDomain(validated.ascii);
+    return NextResponse.json({ ok: true, domain: validated.ascii, mxPresent: info.mxPresent, mxHosts: info.mxHosts ?? [], mxStatus: info.mxStatus });
   } catch {
     return NextResponse.json({ error: GENERIC_ERROR }, { status: 500 });
   }

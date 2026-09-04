@@ -1,7 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { validateDomain } from "@/lib/email-audit/normalize";
-import { runAudit } from "@/lib/email-audit/orchestrator";
-import { DNSCache } from "@/lib/email-audit/cache";
+import { api as emailAudit } from "@/features/email-audit";
 import { RateLimiter } from "@/lib/shared/rate-limit";
 import { clientIp, invalidJsonResponse, rateLimitError, readJsonBody, scheduleCleanup } from "@/lib/shared/api-route";
 import { GENERIC_ERROR } from "@/lib/ui-copy";
@@ -22,7 +20,7 @@ const AUDITS_PER_WINDOW = 20;
 const WINDOW_MS = 10 * 60_000;
 
 // Module-scoped singletons (per serverless instance on Vercel; shared on VPS).
-const cache = new DNSCache();
+const cache = new emailAudit.Cache();
 const limiter = new RateLimiter(AUDITS_PER_WINDOW, WINDOW_MS);
 scheduleCleanup(limiter);
 
@@ -41,16 +39,14 @@ export async function POST(req: NextRequest) {
     return rateLimitError(limiter, ip, `Too many audits. Try again in ${Math.ceil(retryAfter / 60)} minutes.`);
   }
 
-  const validated = validateDomain(rawDomain);
+  const validated = emailAudit.validate(rawDomain);
   if (!validated.ok || !validated.ascii) {
     return NextResponse.json({ error: validated.error ?? "Invalid domain." }, { status: 400 });
   }
 
   try {
-    const result = await runAudit({ domain: validated.ascii }, { cache });
-    return NextResponse.json(result, {
-      headers: { "Cache-Control": "no-store" },
-    });
+    const result = await emailAudit.run({ domain: validated.ascii }, { cache });
+    return NextResponse.json(result, { headers: { "Cache-Control": "no-store" } });
   } catch {
     return NextResponse.json({ error: GENERIC_ERROR }, { status: 500 });
   }

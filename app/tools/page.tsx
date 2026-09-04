@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ScrollReveal } from "@/components/scroll-reveal";
-import { liveTools } from "@/lib/free-tools";
-import type { FreeTool } from "@/lib/free-tools";
+import { toolMetas } from "@/features/tools";
+import type { ToolMeta } from "@/features/types";
 
 /* ── Meta (verbatim from copy.md) ── */
 export const metadata: Metadata = {
@@ -18,7 +18,7 @@ const WHATSAPP_HREF =
 /* ════════════════════════════════════════════════════════════
    Live Tool Card
    ════════════════════════════════════════════════════════════ */
-function LiveToolCard({ tool, index }: { tool: FreeTool; index: number }) {
+function LiveToolCard({ tool, index }: { tool: ToolMeta; index: number }) {
   return (
     <ScrollReveal delay={index * 60} className="flex flex-col">
       {/* Whole card is the link to the tool page */}
@@ -90,7 +90,7 @@ export default function FreeToolsPage() {
       <section className="bg-surface-soft py-24" aria-label="Free tools">
         <div className="mx-auto max-w-[1280px] px-6">
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {liveTools.map((tool, i) => (
+            {toolMetas.map((tool, i) => (
               <LiveToolCard key={tool.slug} tool={tool} index={i} />
             ))}
           </div>

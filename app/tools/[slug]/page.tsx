@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import type { ComponentType } from "react";
 import {
   Accordion,
   AccordionItem,
@@ -7,16 +8,28 @@ import {
   AccordionContent,
 } from "@/components/ui/accordion";
 import { ScrollReveal } from "@/components/scroll-reveal";
-import { liveTools, getToolBySlug } from "@/lib/free-tools";
-import ToolForm from "./tool-form";
-import EmailAuditForm from "@/components/email-audit-form";
-import GeoAuditForm from "@/components/geo-audit-form";
-import EmailPredictForm from "@/components/email-predict-form";
-import LlmsTxtForm from "@/components/llms-txt-form";
+import { toolMetas, getToolBySlug } from "@/features/tools";
+import { ToolGateForm } from "@/components/ToolGateForm";
+import EmailAuditForm from "@/features/email-audit/form";
+import GeoAuditForm from "@/features/geo-audit/form";
+import EmailPredictForm from "@/features/email-predict/form";
+import LlmsTxtForm from "@/features/llms-txt/form";
+
+/*
+ * Instant tools render their own form (client component, one per tool at
+ * features/<slug>/form.tsx). Email tools share the gate form and are driven
+ * entirely by meta.gate — no component map entry needed for them.
+ */
+const INSTANT_FORMS: Record<string, ComponentType> = {
+  "email-audit": EmailAuditForm,
+  "geo-audit": GeoAuditForm,
+  "email-predict": EmailPredictForm,
+  "llms-txt": LlmsTxtForm,
+};
 
 /* ── Static params for the live tools ── */
 export function generateStaticParams() {
-  return liveTools.map((t) => ({ slug: t.slug }));
+  return toolMetas.map((t) => ({ slug: t.slug }));
 }
 
 /* ── Dynamic metadata per copy.md pattern ── */
@@ -52,8 +65,9 @@ export default async function ToolPage({
 
   // Tools that show results on the page (not emailed) get the full page
   // width for their workspace instead of a narrow center column.
-  const isResultTool =
-    slug === "email-audit" || slug === "geo-audit" || slug === "email-predict" || slug === "llms-txt";
+  const isResultTool = tool.family === "instant";
+  // Instant tools bring their own form; email tools share the gate form.
+  const InstantForm = isResultTool ? INSTANT_FORMS[slug] : undefined;
 
   return (
     <>
@@ -109,17 +123,17 @@ export default async function ToolPage({
                 isResultTool ? "p-4 sm:p-6 md:p-10" : "p-6 md:p-8"
               }`}
             >
-              {slug === "email-audit" ? (
-                <EmailAuditForm />
-              ) : slug === "geo-audit" ? (
-                <GeoAuditForm />
-              ) : slug === "email-predict" ? (
-                <EmailPredictForm />
-              ) : slug === "llms-txt" ? (
-                <LlmsTxtForm />
-              ) : (
-                <ToolForm slug={slug} />
-              )}
+              {InstantForm ? (
+                <InstantForm />
+              ) : tool.gate ? (
+                <ToolGateForm
+                  tool={slug}
+                  toolName={tool.name}
+                  inputLabel={tool.gate.inputLabel}
+                  inputPlaceholder={tool.gate.inputPlaceholder}
+                  inputType={tool.gate.inputType}
+                />
+              ) : null}
             </div>
           </ScrollReveal>
         </div>

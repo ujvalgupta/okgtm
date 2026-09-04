@@ -1,7 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { normalizeGeoInput } from "@/lib/geo-audit/normalize";
-import { runGeoAudit } from "@/lib/geo-audit/orchestrator";
-import { GeoResultCache } from "@/lib/geo-audit/cache";
+import { api as geoAudit } from "@/features/geo-audit";
 import { RateLimiter } from "@/lib/shared/rate-limit";
 import { clientIp, invalidJsonResponse, rateLimitError, readJsonBody, scheduleCleanup } from "@/lib/shared/api-route";
 import { GENERIC_ERROR } from "@/lib/ui-copy";
@@ -22,7 +20,7 @@ export const maxDuration = 60;
 const AUDITS_PER_WINDOW = 6;
 const WINDOW_MS = 10 * 60_000;
 
-const cache = new GeoResultCache();
+const cache = new geoAudit.Cache();
 const limiter = new RateLimiter(AUDITS_PER_WINDOW, WINDOW_MS);
 scheduleCleanup(limiter);
 
@@ -41,7 +39,7 @@ export async function POST(req: NextRequest) {
     return rateLimitError(limiter, ip, `Too many audits. Try again in ${Math.ceil(retryAfter / 60)} minutes.`);
   }
 
-  const normalized = normalizeGeoInput(raw);
+  const normalized = geoAudit.validate(raw);
   if (!normalized.ok || !normalized.url) {
     return NextResponse.json({ error: normalized.error ?? "Invalid URL." }, { status: 400 });
   }
@@ -53,7 +51,7 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const report = await runGeoAudit(normalized.url, { budgetMs: 40_000 });
+    const report = await geoAudit.run(normalized.url, { budgetMs: 40_000 });
     cache.set(cacheKey, report);
     return NextResponse.json({ report }, { headers: { "Cache-Control": "no-store" } });
   } catch {
