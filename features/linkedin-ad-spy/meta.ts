@@ -21,8 +21,8 @@ export const meta: ToolMeta = {
   "whatItDoes": "LinkedIn Ad Spy searches the LinkedIn Ad Library for a competitor’s active campaigns and pulls up to 10 live ads in a single search. On top of the raw ads, you get an AI-generated summary that breaks down their messaging angles, creative patterns, and likely targeting approach. The whole thing takes about a minute.",
   "howItWorks": [
     {
-      "title": "Type in a competitor’s name.",
-      "body": "Just the company name. No LinkedIn URL needed for this one."
+      "title": "Paste the company’s LinkedIn page URL.",
+      "body": "A company page like linkedin.com/company/acme. We look up its active ads in the LinkedIn Ad Library."
     },
     {
       "title": "We search the LinkedIn Ad Library.",

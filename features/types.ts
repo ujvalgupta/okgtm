@@ -4,6 +4,8 @@
  * vocabulary of those facts.
  */
 
+import type { ComponentType } from "react";
+
 export type ToolFamily = "instant" | "email";
 
 export interface ToolGate {
@@ -38,8 +40,11 @@ export interface ToolMeta {
  * The per-tool module interface. Each features/<slug>/index.ts exports
  * `meta` plus the family-appropriate surface; features/tools.ts enumerates
  * them. Form components are exported separately from features/<slug>/form.tsx
- * (they are client modules and must not be pulled into server route bundles).
+ * (client modules) and wired into the enumeration here — never into
+ * app/api/* adapters, which must stay free of client-component imports.
  */
 export interface ToolModule {
   meta: ToolMeta;
+  /** instant tools only: the client form features/<slug>/form.tsx. */
+  Form?: ComponentType;
 }

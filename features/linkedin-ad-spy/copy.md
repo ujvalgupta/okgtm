@@ -23,7 +23,7 @@ Paste a company's LinkedIn page URL. We pull their active ads from the LinkedIn 
 LinkedIn Ad Spy searches the LinkedIn Ad Library for a competitor's active campaigns and pulls up to 10 live ads in a single search. On top of the raw ads, you get an AI-generated summary that breaks down their messaging angles, creative patterns, and likely targeting approach. The whole thing takes about a minute.
 
 ## How it works
-1. **Type in a competitor's name.** Just the company name. No LinkedIn URL needed for this one.
+1. **Paste the company's LinkedIn page URL.** A company page like linkedin.com/company/acme. We look up its active ads in the LinkedIn Ad Library.
 2. **We search the LinkedIn Ad Library.** The tool pulls every active ad associated with that company, up to 10 results.
 3. **You get the ads and a strategy breakdown.** Each ad is displayed alongside an AI-generated summary that maps out the patterns across their campaigns.
 

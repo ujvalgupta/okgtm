@@ -19,7 +19,7 @@ type Status =
   | { kind: "error"; message: string };
 
 /**
- * Unified free-tool gate: URL -> email capture (lead magnet) -> async paid
+ * Unified email-tool gate: URL -> email capture (lead magnet) -> async
  * pipeline. Results are delivered to email only. URL shape is validated
  * client-side BEFORE the email gate (no getting stuck), and the email step
  * always offers a way back to fix the URL.
@@ -35,7 +35,7 @@ export function ToolGateForm({
   toolName: string;
   inputLabel: string;
   inputPlaceholder: string;
-  /** "url" = LinkedIn URL input; "name" = free-text input (e.g. ad-spy company name) */
+  /** "url" = LinkedIn URL input; "name" = free-text input (unused today — every email tool takes a URL) */
   inputType?: "url" | "name";
 }) {
   const [step, setStep] = useState<Step>("url");

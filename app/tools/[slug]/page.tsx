@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import type { ComponentType } from "react";
 import {
   Accordion,
   AccordionItem,
@@ -8,24 +7,8 @@ import {
   AccordionContent,
 } from "@/components/ui/accordion";
 import { ScrollReveal } from "@/components/scroll-reveal";
-import { toolMetas, getToolBySlug } from "@/features/tools";
 import { ToolGateForm } from "@/components/ToolGateForm";
-import EmailAuditForm from "@/features/email-audit/form";
-import GeoAuditForm from "@/features/geo-audit/form";
-import EmailPredictForm from "@/features/email-predict/form";
-import LlmsTxtForm from "@/features/llms-txt/form";
-
-/*
- * Instant tools render their own form (client component, one per tool at
- * features/<slug>/form.tsx). Email tools share the gate form and are driven
- * entirely by meta.gate — no component map entry needed for them.
- */
-const INSTANT_FORMS: Record<string, ComponentType> = {
-  "email-audit": EmailAuditForm,
-  "geo-audit": GeoAuditForm,
-  "email-predict": EmailPredictForm,
-  "llms-txt": LlmsTxtForm,
-};
+import { toolMetas, getToolModule } from "@/features/tools";
 
 /* ── Static params for the live tools ── */
 export function generateStaticParams() {
@@ -39,7 +22,8 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const tool = getToolBySlug(slug);
+  const toolModule = getToolModule(slug);
+  const tool = toolModule?.meta;
   if (!tool) return {};
   return {
     title: `${tool.name} - Free GTM Tool | OkGTM`,
@@ -60,14 +44,16 @@ export default async function ToolPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const tool = getToolBySlug(slug);
-  if (!tool) notFound();
+  const toolModule = getToolModule(slug);
+  if (!toolModule) notFound();
+  const tool = toolModule.meta;
 
   // Tools that show results on the page (not emailed) get the full page
   // width for their workspace instead of a narrow center column.
-  const isResultTool = tool.family === "instant";
-  // Instant tools bring their own form; email tools share the gate form.
-  const InstantForm = isResultTool ? INSTANT_FORMS[slug] : undefined;
+  const isInstant = tool.family === "instant";
+  // Instant tools bring their own form (wired in features/tools.ts); email
+  // tools share the gate form, driven entirely by meta.gate.
+  const InstantForm = isInstant ? toolModule.Form : undefined;
 
   return (
     <>
@@ -111,16 +97,16 @@ export default async function ToolPage({
       {/* ═══════════════ 2. EMBEDDED TOOL FORM ═══════════════ */}
       <section
         id="try-it"
-        className={`${isResultTool ? "bg-canvas pb-12 pt-4" : "bg-canvas pb-24"}`}
+        className={`${isInstant ? "bg-canvas pb-12 pt-4" : "bg-canvas pb-24"}`}
         aria-label={`Try ${tool.name}`}
       >
         <div
-          className={`mx-auto w-full px-6 ${isResultTool ? "max-w-[1180px]" : "max-w-[520px]"}`}
+          className={`mx-auto w-full px-6 ${isInstant ? "max-w-[1180px]" : "max-w-[520px]"}`}
         >
           <ScrollReveal>
             <div
               className={`rounded-[24px] bg-surface-soft ${
-                isResultTool ? "p-4 sm:p-6 md:p-10" : "p-6 md:p-8"
+                isInstant ? "p-4 sm:p-6 md:p-10" : "p-6 md:p-8"
               }`}
             >
               {InstantForm ? (
