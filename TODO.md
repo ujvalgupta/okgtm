@@ -1,19 +1,32 @@
 # OkGTM — TODO
 
-## Backend / Convex
-- [ ] **Refresh `OPENROUTER_API_KEY` on Convex** — the key in `.env.local` returns 401 "User not found" on `/chat/completions` (even with the old mistral model), though `/models` works. Generate a fresh key at openrouter.ai and `npx convex env set OPENROUTER_API_KEY <new-key>`. (Model `deepseek/deepseek-v4-flash` confirmed to exist.)
-- [ ] **Set `RESEND_API_KEY` on Convex** (`npx convex env set RESEND_API_KEY <key>` from repo root) — required for the results emails. Key comes from resend.com dashboard.
-- [ ] **Verify `okgtm.com` in Resend** (add the DNS record Resend provides) so emails from `tools@okgtm.com` land in inboxes, not spam. One-time DNS step.
-- [ ] (Optional) `npx convex env set LEAD_FROM_ADDRESS "OkGTM <tools@okgtm.com>"` — defaults to this anyway.
-- [ ] **Rotate `MINDCASE_API_KEY` and `OPENROUTER_API_KEY`** — they were printed in a session log (`convex env list`). Rotate if that transcript is ever shared.
+> State as of the restructure ship (Sep 2026): site live on https://okgtm.com, Convex prod
+> (`fearless-axolotl-553`) deployed, env keys set project-wide, emails verified working
+> end-to-end. Items below are what's still genuinely open.
 
-## Connect / deploy
-- [ ] **Push the Convex restructure** (`npx convex dev` or `convex deploy` from repo root) — the pipeline moved from `convex/tools.ts` to `convex/jobs.ts` + `pipeline.ts` + `toolRegistry.ts`, and `ToolGateForm` now calls `api.jobs.*`. Until the deployment is updated, the email-tool gate forms 404 in the browser. When ready for production, deploy there instead of dev (`proficient-partridge-17`).
+## Security
+- [ ] **Rotate `MINDCASE_API_KEY`, `OPENROUTER_API_KEY`, `RESEND_API_KEY`** — they were
+      printed in session logs (`convex env list`), including transcripts of this restructure.
+      When rotating: set fresh values project-wide with `npx convex env set NAME <key>`
+      (Convex env vars are project-wide — dev and prod share them).
 
 ## Site
 - [ ] `/dashboard` page (nav Resources → Dashboard was removed; rebuild when the product dashboard exists)
 - [ ] `/blog` (removed from nav; add when blog exists)
 - [ ] `/experiments/linkedin` (was planned; labs moves to `labs.okgtm.com` subdomain eventually)
 
-## Housekeeping
-- [x] Remove the empty `frontend/` dir + `.session-cwd-placeholder` — done (restructure step 8).
+## Nice-to-haves / housekeeping
+- [ ] Extract the duplicated instant-tool result UI (StatusBadge/ScoreHero/phase lists per
+      form) into a shared kit — documented as known debt in `docs/ARCHITECTURE.md`.
+- [ ] `artifacts/` still holds the pre-restructure copy/QA scratch (gitignored); archive or
+      delete when no longer wanted.
+
+## Done (verified live, for the record)
+- [x] Convex env keys set (RESEND / OPENROUTER / MINDCASE / MODEL / LEAD_FROM_ADDRESS) —
+      project-wide; OpenRouter key validates 200; results emails arrive (tested live).
+- [x] Resend domain sending works (okgtm.com / ujval@okgtm.com) — no DNS changes needed.
+- [x] Convex backend deployed to prod (`fearless-axolotl-553`) with the restructured
+      `jobs`/`pipeline`/`toolRegistry` modules.
+- [x] Frontend deployed to https://okgtm.com (restructured code, prod Convex wiring).
+- [x] `frontend/` dir + `.session-cwd-placeholder` removed (restructure step 8).
+- [x] Dev origins allowed + dev-only CSP `unsafe-eval` (Next 16 `allowedDevOrigins`).
