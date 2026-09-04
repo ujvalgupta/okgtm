@@ -4,7 +4,7 @@
  */
 
 import type { GeoCheckResult } from "../types";
-import { fetchText, getOriginRobotsUrl } from "../http";
+import { fetchText, robotsTxtUrl } from "../../shared/http";
 import { evaluateRobotsAccess, parseCrawlDelay } from "../robots";
 import type { CheckCtx, RawCheck } from "./ctx";
 
@@ -27,7 +27,7 @@ function wrap(id: string, title: string, categoryKey: string, c: RawCheck, recom
 }
 
 export async function robotsTxtCheck(ctx: CheckCtx): Promise<GeoCheckResult> {
-  const robotsUrl = getOriginRobotsUrl(ctx.normalizedUrl);
+  const robotsUrl = robotsTxtUrl(ctx.normalizedUrl);
   const snapshot = await fetchText(robotsUrl);
 
   if (snapshot.fetchError) {

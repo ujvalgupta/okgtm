@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { validateDomain } from "@/lib/email-audit/normalize";
 import { NodeDNSResolver } from "@/lib/email-audit/dns";
-import { RateLimiter } from "@/lib/email-audit/rateLimit";
+import { RateLimiter } from "@/lib/shared/rate-limit";
+import { clientIp, invalidJsonResponse, rateLimitError, readJsonBody, scheduleCleanup } from "@/lib/shared/api-route";
 import { GENERIC_ERROR } from "@/lib/ui-copy";
 
 /**
@@ -15,21 +16,12 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 const limiter = new RateLimiter(30, 10 * 60_000);
-setInterval(() => limiter.cleanup(), 5 * 60_000).unref?.();
-
-function clientIp(req: NextRequest): string {
-  const fwd = req.headers.get("x-forwarded-for");
-  if (fwd) return fwd.split(",")[0].trim();
-  return "local";
-}
+scheduleCleanup(limiter);
 
 export async function POST(req: NextRequest) {
-  let body: unknown;
-  try {
-    body = await req.json();
-  } catch {
-    return NextResponse.json({ error: "Invalid JSON body." }, { status: 400 });
-  }
+  const body = await readJsonBody(req);
+  if (body === null) return invalidJsonResponse();
+
   const raw = (body as { domain?: unknown })?.domain;
   if (typeof raw !== "string" || !raw.trim()) {
     return NextResponse.json({ error: "Send a domain." }, { status: 400 });
@@ -37,7 +29,7 @@ export async function POST(req: NextRequest) {
 
   const ip = clientIp(req);
   if (!limiter.allow(ip)) {
-    return NextResponse.json({ error: "Too many requests. Try again in a minute." }, { status: 429 });
+    return rateLimitError(limiter, ip, "Too many requests. Try again in a minute.");
   }
 
   const validated = validateDomain(raw);

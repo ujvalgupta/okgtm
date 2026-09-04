@@ -47,18 +47,6 @@ export interface GeoIssue {
   fix: string;
 }
 
-export interface GeoSnapshot {
-  url: string;
-  finalUrl: string;
-  statusCode: number | null;
-  statusText: string | null;
-  headers: Record<string, string>;
-  body: string | null;
-  fetchError?: string;
-  durationMs: number;
-  redirectChain?: { url: string; statusCode: number }[];
-}
-
 export interface GeoAuditResult {
   schemaVersion: string;
   auditId: string;

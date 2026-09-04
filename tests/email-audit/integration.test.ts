@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeAll } from "vitest";
 import { runAudit } from "../../lib/email-audit/orchestrator";
 import { validateDomain } from "../../lib/email-audit/normalize";
-import { fetchWellKnown } from "../../lib/email-audit/ssrf";
+import { fetchWellKnown } from "../../lib/shared/http";
 import dns from "node:dns/promises";
 
 /** Offline guard: skip live DNS tests when there is no network. */

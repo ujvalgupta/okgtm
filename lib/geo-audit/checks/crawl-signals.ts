@@ -4,7 +4,7 @@
  */
 
 import type { GeoCheckResult } from "../types";
-import { fetchText, getOriginSitemapIndexUrl, getOriginSitemapUrl } from "../http";
+import { fetchText, sitemapIndexUrl, sitemapUrl } from "../../shared/http";
 import type { CheckCtx } from "./ctx";
 
 function wrap(status: "PASS" | "WARNING" | "FAIL", reason: string, metadata: Record<string, unknown>, recommendation?: string) {
@@ -134,8 +134,8 @@ const NESTED_SITEMAP_LIMIT = 4;
 
 export async function sitemapCheck(ctx: CheckCtx): Promise<GeoCheckResult> {
   const target = ctx.normalizedUrl.toString();
-  const [sitemapUrl, indexUrl] = [getOriginSitemapUrl(ctx.normalizedUrl), getOriginSitemapIndexUrl(ctx.normalizedUrl)];
-  const [sitemapResp, indexResp] = await Promise.all([fetchText(sitemapUrl), fetchText(indexUrl)]);
+  const [siteSitemapUrl, indexUrl] = [sitemapUrl(ctx.normalizedUrl), sitemapIndexUrl(ctx.normalizedUrl)];
+  const [sitemapResp, indexResp] = await Promise.all([fetchText(siteSitemapUrl), fetchText(indexUrl)]);
   const sitemapFound = !sitemapResp.fetchError && sitemapResp.statusCode === 200 && !!sitemapResp.body;
   const indexFound = !indexResp.fetchError && indexResp.statusCode === 200 && !!indexResp.body;
 

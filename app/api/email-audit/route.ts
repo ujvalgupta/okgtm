@@ -2,7 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { validateDomain } from "@/lib/email-audit/normalize";
 import { runAudit } from "@/lib/email-audit/orchestrator";
 import { DNSCache } from "@/lib/email-audit/cache";
-import { RateLimiter } from "@/lib/email-audit/rateLimit";
+import { RateLimiter } from "@/lib/shared/rate-limit";
+import { clientIp, invalidJsonResponse, rateLimitError, readJsonBody, scheduleCleanup } from "@/lib/shared/api-route";
 import { GENERIC_ERROR } from "@/lib/ui-copy";
 
 /**
@@ -23,21 +24,11 @@ const WINDOW_MS = 10 * 60_000;
 // Module-scoped singletons (per serverless instance on Vercel; shared on VPS).
 const cache = new DNSCache();
 const limiter = new RateLimiter(AUDITS_PER_WINDOW, WINDOW_MS);
-setInterval(() => limiter.cleanup(), 5 * 60_000).unref?.();
-
-function clientIp(req: NextRequest): string {
-  const fwd = req.headers.get("x-forwarded-for");
-  if (fwd) return fwd.split(",")[0].trim();
-  return "local";
-}
+scheduleCleanup(limiter);
 
 export async function POST(req: NextRequest) {
-  let body: unknown;
-  try {
-    body = await req.json();
-  } catch {
-    return NextResponse.json({ error: "Invalid JSON body." }, { status: 400 });
-  }
+  const body = await readJsonBody(req);
+  if (body === null) return invalidJsonResponse();
 
   const rawDomain = (body as { domain?: unknown })?.domain;
   if (typeof rawDomain !== "string" || !rawDomain.trim()) {
@@ -47,10 +38,7 @@ export async function POST(req: NextRequest) {
   const ip = clientIp(req);
   if (!limiter.allow(ip)) {
     const retryAfter = limiter.retryAfterSeconds(ip);
-    return NextResponse.json(
-      { error: `Too many audits. Try again in ${Math.ceil(retryAfter / 60)} minutes.` },
-      { status: 429, headers: { "Retry-After": String(retryAfter) } }
-    );
+    return rateLimitError(limiter, ip, `Too many audits. Try again in ${Math.ceil(retryAfter / 60)} minutes.`);
   }
 
   const validated = validateDomain(rawDomain);

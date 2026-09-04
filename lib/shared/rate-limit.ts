@@ -1,6 +1,7 @@
 /**
- * Simple in-memory sliding-window rate limiter for the public audit endpoint.
- * 20 audits / IP / 10 minutes. Per-process (VPS); per-instance on Vercel.
+ * Simple in-memory sliding-window rate limiter for the public tool endpoints.
+ * Per-process (VPS); per-instance on Vercel — fine for v1 (see cache comments
+ * in the tool routes).
  */
 
 interface Window {

@@ -1,10 +1,10 @@
-import type { GeoSnapshot } from "../types";
+import type { HttpSnapshot } from "../../shared/http";
 
 export interface CheckCtx {
   inputUrl: string;
   normalizedUrl: URL;
   /** Populated by the fetchability check, consumed by the page-level checks. */
-  base?: GeoSnapshot;
+  base?: HttpSnapshot;
 }
 
 export interface RawCheck {

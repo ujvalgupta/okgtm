@@ -11,7 +11,7 @@
  * No opinions about whether llms.txt helps or matters. Just the analysis.
  */
 
-import { fetchStatus, fetchText } from "../geo-audit/http";
+import { fetchStatus, fetchText } from "../shared/http";
 
 export type LStatus = "PASS" | "WARN" | "FAIL";
 

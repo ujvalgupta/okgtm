@@ -1,6 +1,6 @@
 import type { CheckResult } from "../types";
 import { mkCheck, ev, type AuditContext } from "./helpers";
-import { fetchWellKnown } from "../ssrf";
+import { fetchWellKnown } from "../../shared/http";
 
 /** BIMI (optional, low weight) */
 export async function bimiCheck(ctx: AuditContext): Promise<CheckResult> {

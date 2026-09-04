@@ -4,7 +4,7 @@
  */
 
 import type { GeoCheckResult } from "../types";
-import { fetchText } from "../http";
+import { fetchText } from "../../shared/http";
 import type { CheckCtx } from "./ctx";
 
 const SAMPLE_SIZE = 5;

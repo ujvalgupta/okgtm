@@ -1,9 +1,9 @@
-import type { GeoCheckResult, GeoSnapshot } from "../types";
-import { fetchText } from "../http";
+import type { GeoCheckResult } from "../types";
+import { fetchText, type HttpSnapshot } from "../../shared/http";
 import { dnsLookup, tlsHandshake } from "../network";
 import type { CheckCtx } from "./ctx";
 
-export async function fetchabilityCheck(ctx: CheckCtx): Promise<{ result: GeoCheckResult; snapshot?: GeoSnapshot }> {
+export async function fetchabilityCheck(ctx: CheckCtx): Promise<{ result: GeoCheckResult; snapshot?: HttpSnapshot }> {
   const url = ctx.normalizedUrl.toString();
   const hostname = ctx.normalizedUrl.hostname;
   const protocol = ctx.normalizedUrl.protocol;
