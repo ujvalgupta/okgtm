@@ -15,7 +15,6 @@ import type { GeoSnapshot } from "./types";
 const PER_FETCH_TIMEOUT_MS = 9000;
 const MAX_BODY_BYTES = 3_000_000;
 const MAX_REDIRECTS = 6;
-
 const PRIVATE_V4 = ["10.0.0.0/8", "172.16.0.0/12", "192.168.0.0/16", "127.0.0.0/8", "169.254.0.0/16", "0.0.0.0/8", "100.64.0.0/10", "192.0.0.0/24"];
 
 function ip4InCidr(ip: string, cidr: string): boolean {
@@ -61,19 +60,23 @@ async function assertPublicTarget(url: URL): Promise<string | null> {
   return null;
 }
 
-async function readBody(response: Response): Promise<{ body: string | null; size: number }> {
+async function readBody(response: Response, maxBytes: number): Promise<{ body: string | null; size: number }> {
   const contentType = (response.headers.get("content-type") ?? "").toLowerCase();
   const isTextual = contentType.includes("text") || contentType.includes("html") || contentType.includes("json") || contentType.includes("xml") || contentType === "";
   if (!isTextual) return { body: null, size: 0 };
   const buf = Buffer.from(await response.arrayBuffer());
-  if (buf.length > MAX_BODY_BYTES) return { body: null, size: buf.length };
+  if (buf.length > maxBytes) return { body: null, size: buf.length };
   return { body: buf.toString("utf8"), size: buf.length };
 }
 
-export async function fetchText(url: string, init?: { headers?: Record<string, string> }): Promise<GeoSnapshot> {
+export async function fetchText(
+  url: string,
+  init?: { headers?: Record<string, string>; maxBytes?: number }
+): Promise<GeoSnapshot> {
   const startedAt = Date.now();
   const headers: Record<string, string> = {};
   const chain: { url: string; statusCode: number }[] = [];
+  const maxBytes = init?.maxBytes ?? MAX_BODY_BYTES;
   let currentUrl = url;
 
   try {
@@ -127,7 +130,7 @@ export async function fetchText(url: string, init?: { headers?: Record<string, s
         continue;
       }
 
-      const { body, size } = await readBody(response);
+      const { body, size } = await readBody(response, maxBytes);
       return {
         url,
         finalUrl: currentUrl,
@@ -137,7 +140,7 @@ export async function fetchText(url: string, init?: { headers?: Record<string, s
         body,
         durationMs: Date.now() - startedAt,
         redirectChain: chain,
-        ...(size > MAX_BODY_BYTES ? { fetchError: "response too large" } : {}),
+        ...(size > maxBytes ? { fetchError: "response too large" } : {}),
       };
     }
     return snapshot(url, currentUrl, chain, null, headers, null, "too many redirects", startedAt);
@@ -168,6 +171,59 @@ export async function fetchWithRedirectChain(url: string): Promise<{ chain: { ur
     finalUrl: result.finalUrl,
     fetchError: result.fetchError,
   };
+}
+
+/**
+ * Status-only fetch for link verification: returns the final HTTP status
+ * WITHOUT downloading the body. Pages can be megabytes of HTML; a link check
+ * only needs to know if the URL responds. Same SSRF guards as fetchText.
+ */
+export async function fetchStatus(url: string, init?: { headers?: Record<string, string> }): Promise<{ status: number | null; error?: string }> {
+  let currentUrl = url;
+  for (let hop = 0; hop <= MAX_REDIRECTS; hop++) {
+    let parsed: URL;
+    try {
+      parsed = new URL(currentUrl);
+    } catch {
+      return { status: null, error: "invalid URL" };
+    }
+    if (parsed.protocol !== "http:" && parsed.protocol !== "https:") {
+      return { status: null, error: "unsupported protocol" };
+    }
+    const blocked = await assertPublicTarget(parsed);
+    if (blocked) return { status: null, error: blocked };
+
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), PER_FETCH_TIMEOUT_MS);
+    let response: Response;
+    try {
+      response = await fetch(currentUrl, {
+        redirect: "manual",
+        headers: { "user-agent": init?.headers?.["user-agent"] ?? "Mozilla/5.0 (compatible; OkGTM-GeoAudit/1.0; +okgtm.com)", ...init?.headers },
+        signal: controller.signal,
+      });
+      // Headers are enough; stop the body download.
+      controller.abort();
+    } catch (error) {
+      const msg = error instanceof Error ? (error.name === "AbortError" ? "timed out" : error.message) : String(error);
+      return { status: null, error: msg };
+    } finally {
+      clearTimeout(timer);
+    }
+
+    if (response.status >= 300 && response.status < 400) {
+      const location = response.headers.get("location");
+      if (!location) return { status: response.status, error: "redirect without location" };
+      const next = new URL(location, currentUrl);
+      if (next.hostname.toLowerCase() !== parsed.hostname.toLowerCase() && !sameRegistrableDomain(next.hostname, parsed.hostname)) {
+        return { status: response.status, error: "cross-site redirect blocked" };
+      }
+      currentUrl = next.toString();
+      continue;
+    }
+    return { status: response.status };
+  }
+  return { status: null, error: "too many redirects" };
 }
 
 export function getOriginRobotsUrl(u: URL): string {

@@ -61,11 +61,11 @@ export default function FreeToolsPage() {
     <>
       {/* ═══════════════ HERO ═══════════════ */}
       <section
-        className="bg-canvas pb-24 pt-16 md:pt-24"
+        className="bg-canvas pb-20 pt-16 md:pb-24 md:pt-28"
         aria-labelledby="free-tools-heading"
       >
         <div className="mx-auto w-full max-w-[1280px] px-6">
-          <div className="mx-auto max-w-[640px] text-center">
+          <div className="mx-auto max-w-[1100px] text-center">
             {/* Eyebrow */}
             <p
               className="hero-enter text-xs font-semibold uppercase tracking-[1.5px] text-muted-foreground"
@@ -74,13 +74,13 @@ export default function FreeToolsPage() {
               FREE GTM TOOLS
             </p>
 
-            {/* Headline */}
+            {/* Headline — sized to stay on ONE centered line at desktop widths */}
             <h1
               id="free-tools-heading"
-              className="hero-enter mt-5 text-balance font-display text-[32px] font-medium leading-[1.05] tracking-[-0.5px] text-ink md:text-[40px] md:tracking-[-1px] lg:text-[52px] lg:tracking-[-2px]"
+              className="hero-enter mt-5 font-display text-[34px] font-medium leading-[1.1] tracking-[-0.5px] text-ink md:text-[44px] md:tracking-[-1px] lg:text-[54px] lg:tracking-[-2px]"
               style={{ "--hero-delay": "80ms" } as React.CSSProperties}
             >
-              Free GTM tools that get you closer to a reply
+              Free tools to build your GTM motion
             </h1>
           </div>
         </div>

@@ -12,6 +12,7 @@ import ToolForm from "./tool-form";
 import EmailAuditForm from "@/components/email-audit-form";
 import GeoAuditForm from "@/components/geo-audit-form";
 import EmailPredictForm from "@/components/email-predict-form";
+import LlmsTxtForm from "@/components/llms-txt-form";
 
 /* ── Static params for the live tools ── */
 export function generateStaticParams() {
@@ -51,7 +52,8 @@ export default async function ToolPage({
 
   // Tools that show results on the page (not emailed) get the full page
   // width for their workspace instead of a narrow center column.
-  const isResultTool = slug === "email-audit" || slug === "geo-audit" || slug === "email-predict";
+  const isResultTool =
+    slug === "email-audit" || slug === "geo-audit" || slug === "email-predict" || slug === "llms-txt";
 
   return (
     <>
@@ -113,6 +115,8 @@ export default async function ToolPage({
                 <GeoAuditForm />
               ) : slug === "email-predict" ? (
                 <EmailPredictForm />
+              ) : slug === "llms-txt" ? (
+                <LlmsTxtForm />
               ) : (
                 <ToolForm slug={slug} />
               )}
