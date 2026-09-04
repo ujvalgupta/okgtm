@@ -8,7 +8,7 @@
 - [ ] **Rotate `MINDCASE_API_KEY` and `OPENROUTER_API_KEY`** — they were printed in a session log (`convex env list`). Rotate if that transcript is ever shared.
 
 ## Connect / deploy
-- [ ] `npx convex deploy` when ready to push to the production Convex deployment (currently on dev deployment `proficient-partridge-17`).
+- [ ] **Push the Convex restructure** (`npx convex dev` or `convex deploy` from repo root) — the pipeline moved from `convex/tools.ts` to `convex/jobs.ts` + `pipeline.ts` + `toolRegistry.ts`, and `ToolGateForm` now calls `api.jobs.*`. Until the deployment is updated, the email-tool gate forms 404 in the browser. When ready for production, deploy there instead of dev (`proficient-partridge-17`).
 
 ## Site
 - [ ] `/dashboard` page (nav Resources → Dashboard was removed; rebuild when the product dashboard exists)
@@ -16,4 +16,4 @@
 - [ ] `/experiments/linkedin` (was planned; labs moves to `labs.okgtm.com` subdomain eventually)
 
 ## Housekeeping
-- [ ] Remove the empty `frontend/` dir + `.session-cwd-placeholder` (session shell-cwd artifact) after the pi session restarts at the repo root.
+- [x] Remove the empty `frontend/` dir + `.session-cwd-placeholder` — done (restructure step 8).
