@@ -53,9 +53,11 @@ app/                        thin shell — Next.js forces routes to live here
 └── api/<slug>/route.ts     instant tools: 15-line adapters (validate → rate-limit → engine)
 components/shared/          ToolGateForm (email-tool gate) + shared result-UI kit (StatusBadge, ScoreHero, phase hook)
 
-convex/                     job pipeline for email tools
+convex/                     self-contained deployment unit — cannot import features/ or lib/
 ├── schema.ts               leads · emailRateLimits · apiUsage · analysisJobs
-├── jobs.ts                 requestAnalysis / runAnalysis / job queries (split from the old tools.ts)
+├── jobs.ts                 requestAnalysis / runAnalysis / job queries (was the old tools.ts)
+├── pipeline.ts             the four raw-data strategies (posts, ads, posts-comments, profile-comments)
+├── toolRegistry.ts         email-tool config mirror: slug → { name, strategy }
 └── mindcase.ts llm.ts email.ts emailGate.ts profileUrl.ts rateLimits.ts newsletter.ts
 ```
 
@@ -72,9 +74,18 @@ convex/                     job pipeline for email tools
    module and complexity should reappear across callers, proving it earns its keep.)
 5. **No central registry god-file.** Tool facts (copy, config) are colocated with each tool.
    `features/tools.ts` is an enumeration of imports — the minimum a dynamic route needs.
-6. **No mirrors across the client/Convex seam.** Validators are pure modules in `lib/shared/`
-   imported by both sides. If Convex bundling ever rejects a cross-tree import, the exception
-   is recorded in an ADR before any copy-paste appears.
+6. **No mirrors across the client/Convex seam — with one enforced exception.**
+   Convex is a self-contained deployment unit (its tsconfig covers convex/ only and
+   cannot import across the repo), so the few per-tool facts the backend needs
+   (email-tool slugs + display names + strategy) live in `convex/toolRegistry.ts`
+   as a deliberate mirror of `features/*/meta.ts`. The mirror is *enforced*:
+   `tests/convex/email-tools-config.test.ts` fails if the two sides drift. Do not
+   widen the mirror without adding a matching test. Validators duplicated for
+   client vs server (`lib/email.ts` vs `convex/emailGate.ts`, etc.) are the same
+   exception: Convex cannot import them, so both sides stay in sync by hand.
+7. **Convex job pipeline is one deep module.** Email tools are parameterized
+   instances of it — `convex/toolRegistry.ts` maps slug → strategy; strategies
+   live once in `convex/pipeline.ts`; job lifecycle in `convex/jobs.ts`.
 
 ## Copy
 
@@ -110,10 +121,10 @@ Raw competitor references and QA screenshots stay in the gitignored `artifacts/`
 
 | Step | Work | Status |
 |---|---|---|
-| 1 | CONTEXT.md, ARCHITECTURE.md, ADRs | in progress |
-| 2 | `lib/shared/` extraction + dedup | pending |
-| 3 | Instant tools → `features/` | pending |
-| 4 | Email tools → `features/` + Convex split | pending |
+| 1 | CONTEXT.md, ARCHITECTURE.md, ADRs | done |
+| 2 | `lib/shared/` extraction + dedup | done |
+| 3 | Instant tools → `features/` | done |
+| 4 | Email tools → `features/` + Convex split | done |
 | 5 | Home page data extraction | pending |
 | 6 | Copy consolidation into tracked markdown | pending |
 | 7 | `.pi/agents/*.md` corrected (diff-approved) | pending |

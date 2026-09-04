@@ -1,3 +1,9 @@
+/**
+ * Job lifecycle for the email-tool pipeline: public submission
+ * (requestAnalysis), the async run (runAnalysis), and job status plumbing.
+ * Raw-data strategies live in ./pipeline; per-tool config in ./toolRegistry.
+ */
+
 import {
   mutation,
   query,
@@ -10,33 +16,15 @@ import { v } from "convex/values";
 import { isValidEmail, normalizeEmail } from "./emailGate";
 import { rateLimitCheck, globalWindowKey, globalCapAllowed } from "./rateLimits";
 import { normalizeLinkedInUrl } from "./profileUrl";
-import { runAgent, waitForResults } from "./mindcase";
+import { fetchToolData } from "./pipeline";
+import { emailToolConfig, isEmailTool } from "./toolRegistry";
 import { structureResults } from "./llm";
 import { sendResultsEmail, sendNotFoundEmail } from "./email";
 
-const TOOL_NAMES: Record<string, string> = {
-  "linkedin-post-spy": "LinkedIn Post Spy",
-  "linkedin-ad-spy": "LinkedIn Ad Spy",
-  "steal-competitor-leads": "Steal Competitor Leads",
-  "find-lost-leads": "Find Lost Leads",
-  "competitor-engagement-spy": "Competitor Engagement Spy",
-  "lead-journey-finder": "Lead Journey Finder",
-};
-
-/** Tools whose gate input is a LinkedIn URL. */
-const URL_INPUT_TOOLS = new Set([
-  "linkedin-post-spy",
-  "linkedin-ad-spy", // company page URL, e.g. linkedin.com/company/acme
-  "steal-competitor-leads",
-  "find-lost-leads",
-  "competitor-engagement-spy",
-  "lead-journey-finder",
-]);
-
 /**
- * Public entry point from the tool forms.
+ * Public entry point from the tool gate forms.
  * 1. validates email format
- * 2. validates + normalizes the tool's inputs (tool-aware)
+ * 2. validates the tool is a registered email tool + normalizes its LinkedIn URL
  * 3. upserts the lead (ONE row per unique email)
  * 4. global 60s rate-limit check per email (across ALL tools)
  * 5. enqueues the async paid pipeline (mindcase -> LLM -> email)
@@ -62,15 +50,14 @@ export const requestAnalysis = mutation({
       return { ok: false as const, error: "invalid_email" as const };
     }
 
-    // 2. tool-aware input validation/normalization
+    // 2. registered email tool? (the gate always sends a URL for these)
+    if (!isEmailTool(args.tool)) {
+      return { ok: false as const, error: "invalid_url" as const };
+    }
     let inputs = { ...args.inputs };
-    if (URL_INPUT_TOOLS.has(args.tool)) {
-      try {
-        inputs.profileUrl = normalizeLinkedInUrl(inputs.profileUrl ?? "");
-      } catch {
-        return { ok: false as const, error: "invalid_url" as const };
-      }
-    } else {
+    try {
+      inputs.profileUrl = normalizeLinkedInUrl(inputs.profileUrl ?? "");
+    } catch {
       return { ok: false as const, error: "invalid_url" as const };
     }
 
@@ -89,7 +76,7 @@ export const requestAnalysis = mutation({
       await ctx.db.insert("emailRateLimits", { email, lastCallAt: now });
     }
 
-    // 4b. GLOBAL cap — max paid calls per minute across ALL users
+    // 3b. GLOBAL cap — max paid calls per minute across ALL users
     const windowKey = globalWindowKey(now);
     const usage = await ctx.db
       .query("apiUsage")
@@ -132,68 +119,11 @@ export const requestAnalysis = mutation({
       status: "queued",
       createdAt: now,
     });
-    await ctx.scheduler.runAfter(0, internal.tools.runAnalysis, { jobId });
+    await ctx.scheduler.runAfter(0, internal.jobs.runAnalysis, { jobId });
 
     return { ok: true as const, jobId };
   },
 });
-
-/** Per-tool Mindcase strategy. Returns the raw rows to hand to the LLM. */
-async function fetchToolData(
-  tool: string,
-  inputs: Record<string, string>
-): Promise<unknown[]> {
-  switch (tool) {
-    case "linkedin-post-spy": {
-      const jobId = await runAgent("linkedin", "posts", {
-        urls: inputs.profileUrl,
-        maxResults: 5,
-      });
-      return waitForResults(jobId);
-    }
-    case "linkedin-ad-spy": {
-      const jobId = await runAgent("linkedin", "ads-library", {
-        urls: inputs.profileUrl, // company page URL, e.g. linkedin.com/company/acme
-        maxResults: 5,
-      });
-      return waitForResults(jobId);
-    }
-    case "steal-competitor-leads":
-    case "find-lost-leads": {
-      // posts first, then 1 commenter per post (post-comments takes post URLs)
-      const postsJob = await runAgent("linkedin", "posts", {
-        urls: inputs.profileUrl,
-        maxResults: 5,
-      });
-      const posts = await waitForResults<{ postUrl?: string }>(postsJob);
-      const leads: unknown[] = [];
-      for (const post of posts.slice(0, 5)) {
-        if (!post.postUrl) continue;
-        try {
-          const commentsJob = await runAgent("linkedin", "post-comments", {
-            posts: post.postUrl,
-            maxResults: 1,
-          });
-          const comments = await waitForResults<unknown>(commentsJob);
-          leads.push({ postUrl: post.postUrl, commenter: comments[0] ?? null });
-        } catch {
-          // skip posts whose comments are inaccessible
-        }
-      }
-      return leads;
-    }
-    case "competitor-engagement-spy":
-    case "lead-journey-finder": {
-      const jobId = await runAgent("linkedin", "profile-comments", {
-        profiles: inputs.profileUrl,
-        maxResults: 5,
-      });
-      return waitForResults(jobId);
-    }
-    default:
-      throw new Error(`unknown tool: ${tool}`);
-  }
-}
 
 /**
  * Async paid pipeline: mindcase -> LLM structure -> clean email.
@@ -203,28 +133,28 @@ export const runAnalysis = internalAction({
   args: { jobId: v.id("analysisJobs") },
   handler: async (ctx, args) => {
     const { jobId } = args;
-    const job = await ctx.runQuery(internal.tools.getJob, { jobId });
+    const job = await ctx.runQuery(internal.jobs.getJob, { jobId });
     if (!job) return;
     const inputs = job.inputs ?? {};
+    const config = emailToolConfig(job.tool);
+    if (!config) return;
 
-    await ctx.runMutation(internal.tools.updateJob, {
+    await ctx.runMutation(internal.jobs.updateJob, {
       jobId,
       status: "running",
     });
 
     try {
-      const raw = await fetchToolData(job.tool, inputs);
+      const raw = await fetchToolData(config.strategy, inputs);
       const hasResults = Array.isArray(raw) && raw.length > 0;
-
-      const toolName = TOOL_NAMES[job.tool] ?? job.tool;
 
       if (!hasResults) {
         await sendNotFoundEmail({
           to: job.email,
-          toolName,
+          toolName: config.name,
           profileUrl: inputs.profileUrl ?? "",
         });
-        await ctx.runMutation(internal.tools.updateJob, {
+        await ctx.runMutation(internal.jobs.updateJob, {
           jobId,
           status: "completed",
         });
@@ -236,19 +166,19 @@ export const runAnalysis = internalAction({
 
       await sendResultsEmail({
         to: job.email,
-        toolName,
+        toolName: config.name,
         profileUrl: inputs.profileUrl ?? "",
         report,
       });
 
-      await ctx.runMutation(internal.tools.updateJob, {
+      await ctx.runMutation(internal.jobs.updateJob, {
         jobId,
         status: "completed",
       });
     } catch (err) {
       const raw = err instanceof Error ? err.message : "unknown error";
       const message = sanitizeError(raw);
-      await ctx.runMutation(internal.tools.updateJob, {
+      await ctx.runMutation(internal.jobs.updateJob, {
         jobId,
         status: "failed",
         error: message,
@@ -295,7 +225,6 @@ export const updateJob = internalMutation({
     });
   },
 });
-
 
 /** Strip anything that could be sensitive from persisted error text. */
 function sanitizeError(raw: string): string {

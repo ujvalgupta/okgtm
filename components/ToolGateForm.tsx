@@ -107,14 +107,14 @@ function GateFormInner(props: {
     urlError,
     setUrlError,
   } = props;
-  const requestAnalysis = useMutation(api.tools.requestAnalysis);
+  const requestAnalysis = useMutation(api.jobs.requestAnalysis);
   const urlInputRef = useRef<HTMLInputElement>(null);
   const emailInputRef = useRef<HTMLInputElement>(null);
   const [jobId, setJobId] = useState<Id<"analysisJobs"> | null>(null);
   // Live job status (server pushes updates — no busy polling). When the async
   // paid pipeline fails (e.g. paid-API credits exhausted) we swap the
   // "results on their way" promise for the generic error message.
-  const jobStatus = useQuery(api.tools.getPublicJob, jobId ? { jobId } : "skip");
+  const jobStatus = useQuery(api.jobs.getPublicJob, jobId ? { jobId } : "skip");
 
   // Cursor goes straight into the active input (URL or email step).
   useEffect(() => {

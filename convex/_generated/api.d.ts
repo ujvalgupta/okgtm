@@ -10,12 +10,14 @@
 
 import type * as email from "../email.js";
 import type * as emailGate from "../emailGate.js";
+import type * as jobs from "../jobs.js";
 import type * as llm from "../llm.js";
 import type * as mindcase from "../mindcase.js";
 import type * as newsletter from "../newsletter.js";
+import type * as pipeline from "../pipeline.js";
 import type * as profileUrl from "../profileUrl.js";
 import type * as rateLimits from "../rateLimits.js";
-import type * as tools from "../tools.js";
+import type * as toolRegistry from "../toolRegistry.js";
 
 import type {
   ApiFromModules,
@@ -26,12 +28,14 @@ import type {
 declare const fullApi: ApiFromModules<{
   email: typeof email;
   emailGate: typeof emailGate;
+  jobs: typeof jobs;
   llm: typeof llm;
   mindcase: typeof mindcase;
   newsletter: typeof newsletter;
+  pipeline: typeof pipeline;
   profileUrl: typeof profileUrl;
   rateLimits: typeof rateLimits;
-  tools: typeof tools;
+  toolRegistry: typeof toolRegistry;
 }>;
 
 /**
