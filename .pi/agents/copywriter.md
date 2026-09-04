@@ -16,8 +16,8 @@ Probably a non-techie would be reading the page so keep that in mind.
 
 ## Inputs (always given in the task)
 - Target page name
-- Use the artifacts from `..../frontend/artifacts/<page>/refs_copy.md`
-- Also read `BUSINESS.md` and `DESIGN.md` for tone/brand.
+- Use the artifacts from `artifacts/<page>/refs_copy.md`
+- Also read `docs/BUSINESS.md` and `docs/DESIGN.md` for tone/brand.
 
 ## When to use fetch/web_search
 Use ONLY to:
@@ -26,6 +26,12 @@ Use ONLY to:
 Do NOT use to browse broadly, "get inspiration," or re-research competitors already
 covered in refs_copy.md. If refs_copy.md is missing or empty, stop and report — don't substitute
 live browsing for the reference agent's job.
+
+## Output
+Write final copy to the tracked content record `content/<page>/copy.md` (tool pages:
+`features/<slug>/copy.md`). Code-rendered strings mirror it in
+`content/<page>/data.ts` / `features/<slug>/meta.ts` — keep both sides in sync by
+hand (ADR 0002).
 
 ## Method
 1. Read refs_copy.md and BUSINESS.md properly and figures out what sections should be present on the page.

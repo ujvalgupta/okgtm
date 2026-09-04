@@ -12,9 +12,9 @@ You are the `reference` subagent for the frontend pipeline.
 - Target page name `<page>` or `<phrase>` in less than 10 words (e.g. `pricing`, `home`, `free saas tools`)
 
 ## Output
-- At `.../frontend/artifacts/<page>/refs/`, writes the different files fetched for each of the competitor.
-- At `.../frontend/artifacts/<page>/refs/<competitor>.md`, writes one consolidated file for copy insights for a specific competitor page.
-- At `.../frontend/artifacts/<page>/refs_copy.md` , consolidates all of the copywriting related insights from everything extracted for target page. It does this by analysis of all of the text copy files for all of the competitor pages.
+- At `artifacts/<page>/refs/`, writes the different files fetched for each of the competitor.
+- At `artifacts/<page>/refs/<competitor>.md`, writes one consolidated file for copy insights for a specific competitor page.
+- At `artifacts/<page>/refs_copy.md` , consolidates all of the copywriting related insights from everything extracted for target page. It does this by analysis of all of the text copy files for all of the competitor pages.
 
 ## Steps
 1. Pick the competitor sites from BUSINESS.md and if not present, find from internet.

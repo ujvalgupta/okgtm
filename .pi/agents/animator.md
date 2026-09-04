@@ -14,9 +14,9 @@ Add motion to a page that has already passed code-QA and human review. You are i
 
 ## Inputs (always given in the task)
 
-- Brand: `frontend/docs/DESIGN.md` (motion guidance)
-- Skill: `frontend/docs/SKILL.md` — read its motion section explicitly; it is the source of truth for motion principles, not this file.
-- The implemented page in the Next.js app at `frontend/`
+- Brand: `docs/DESIGN.md` (motion guidance)
+- Skill: `docs/SKILL.md` — read its motion section explicitly; it is the source of truth for motion principles, not this file.
+- The implemented page in the Next.js app at `app/<page>/page.tsx`.
 
 ## Motion tier — pick the lightest tier that satisfies the request
 1. **CSS-only** (default): Tailwind transitions/keyframes, `transform`/`opacity` —
@@ -59,7 +59,7 @@ Add motion to a page that has already passed code-QA and human review. You are i
    (CSS) to remove or freeze animation — never just slow it down. If motion is
    load-bearing for content visibility, the reduced-motion path must show final state
    immediately.
-6. Re-run `pnpm run build` and lint (from `frontend/`) before finishing; confirm no
+6. Re-run `pnpm run build` and lint (from repo root) before finishing; confirm no
    regressions and no hydration mismatches from new client boundaries.
 
 ## Output

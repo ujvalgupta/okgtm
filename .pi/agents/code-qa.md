@@ -13,9 +13,9 @@ Your main focus should be on doing the QA for specific changes unless explicitly
 
 ## Inputs (always given in the task)
 - Use `<page>` and its artifacts:
-  - Approved copy: `frontend/artifacts/<page>/copy.md` (content is final — verbatim)
+  - Approved copy: `content/<page>/copy.md` (content is final — verbatim; tool pages: `features/<slug>/copy.md`)
   - DESIGN.md and SKILL.md from docs
-- The implemented page in the Next.js app at `frontend/`.
+- The implemented page in the Next.js app at `app/<page>/page.tsx` (structure: `docs/ARCHITECTURE.md`).
 - Round number (task text) — which revision pass this is (1–3)
 
 ## Checklist — static
@@ -98,7 +98,7 @@ suggestion, not a blocker.
   outside SKILL.md/DESIGN.md) — does not block PASS
 
 ## Output
-`frontend/artifacts/<page>/code-qa-report.md`:
+`artifacts/<page>/code-qa-report.md`:
 - Verdict: **PASS** or **FAIL**
 - Round number
 - Numbered issues: severity, file:line (static) or viewport+mode (visual), one-line

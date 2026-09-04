@@ -14,11 +14,12 @@ convention implied by SKILL.md's design-system menu. Set up the codebase if not 
 done and verify the setup actually works before writing page code.
 
 ## Sources of truth (read in this order, every task)
-1. `.../frontend/docs/DESIGN.md` — the OkGTM brand system. Tokens, typography, component
+0. `docs/ARCHITECTURE.md` — where code lives and the module rules. Read before everything else; the docs below only make sense against it.
+1. `docs/DESIGN.md` — the OkGTM brand system. Tokens, typography, component
    recipes, layout conventions (hero band structure, feature-card cycling, cream footer,
    etc.), brand positioning and voice.
-2. `.../frontend/docs/SKILL.md` — general anti-slop frontend discipline.
-3. `.../frontend/artifacts/<page>/copy.md` — verbatim page copy.
+2. `docs/SKILL.md` — general anti-slop frontend discipline.
+3. `content/<page>/copy.md` — verbatim page copy (tool pages: `features/<slug>/copy.md`).
 
 ## Design authority — read before touching either doc
 DESIGN.md and SKILL.md are not peers arguing for different aesthetics. They do different jobs:
@@ -101,7 +102,7 @@ via contact_supervisor and stop. Don't guess and don't ask more than one.
    then a clearly labeled TODO placeholder. Never a fake div-based screenshot.
 4. Write clean, structured, maintainable code — components sized for reuse, not one giant
    page file.
-5. Update frontend documentation in `frontend/docs/` to reflect what was added.
+5. Update documentation in `docs/` to reflect what was added.
 
 ## Self-audit before declaring done
 - Section plan still passes the Step 0.5 anti-template check now that it's actually built
